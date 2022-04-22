@@ -6,6 +6,7 @@ from web3.middleware import geth_poa_middleware
 from blockchainetl.jobs.export_lending_log_job import ExportLendingEvent
 from blockchainetl.streaming.event_streamer_adapter import EventStreamerAdapter
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
+from artifacts.abi.lending_pool_abi import LENDING_POOL_ABI
 
 
 class EthLendingLogStreamerAdapter(EventStreamerAdapter):
@@ -15,7 +16,21 @@ class EthLendingLogStreamerAdapter(EventStreamerAdapter):
             provider_uri_archive_node,
             client_querier_archive_node,
             client_querier_full_node,
+            contract_addresses,
+            item_exporter,
+            provider,
+            batch_size=96,
+            max_workers=8,
+            abi=LENDING_POOL_ABI,
             oracle_abi=TRAVA_ORACLE_ABI):
+        super().__init__(
+            contract_addresses=contract_addresses,
+            item_exporter=item_exporter,
+            provider=provider,
+            batch_size=batch_size,
+            max_workers=max_workers,
+            abi=abi
+        )
         self.oracle_abi = oracle_abi
         self.oracle_address = oracle_address
         self.provider_uri_archive_node = provider_uri_archive_node
@@ -34,7 +49,6 @@ class EthLendingLogStreamerAdapter(EventStreamerAdapter):
 
     def open(self):
         self.item_exporter.open()
-
 
     def export_all(self, start_block, end_block):
         # Extract token transfers

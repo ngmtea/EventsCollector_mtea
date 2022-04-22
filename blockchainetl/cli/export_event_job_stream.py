@@ -37,7 +37,7 @@ from constants.abi_constants import ABI
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--last-synced-block-file', default='last_synced_block.txt', show_default=True, type=str, help='')
 @click.option('--lag', default=0, show_default=True, type=int, help='The number of blocks to lag behind the network.')
-@click.option('-p', '--provider', required=True, type=str,
+@click.option('-p', '--provider', type=str,
               help='The URI of the web3 provider e.g. file://$HOME/Library/Ethereum/geth.ipc or http://localhost:8545/')
 @click.option('-o', '--output', default='-', show_default=True, type=str,
               help='The output file. If not specified stdout is used.')

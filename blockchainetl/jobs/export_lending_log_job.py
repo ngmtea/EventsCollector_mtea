@@ -8,6 +8,7 @@ from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
 from blockchainetl.jobs.event_exporter import ExportEvent
 from query_state_lib.base.utils.encoder import encode_eth_call_data
 from artifacts.abi.chainlink_abi import CHAINLINK_ABI
+from artifacts.abi.lending_pool_abi import LENDING_POOL_ABI
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,11 +29,29 @@ def eth_call_block_by_block_number(block_number, identify):
 
 class ExportLendingEvent(ExportEvent):
     def __init__(self,
+                 start_block,
+                 end_block,
+                 batch_size,
+                 max_workers,
+                 item_exporter,
+                 web3,
+                 web3_,
+                 contract_addresses,
                  client_querier_full_node,
                  client_querier_archive_node,
-                 web3_,
                  oracle_address,
+                 abi=LENDING_POOL_ABI,
                  oracle_abi=TRAVA_ORACLE_ABI):
+        super().__init__(
+            start_block=start_block,
+            end_block=end_block,
+            batch_size=batch_size,
+            max_workers=max_workers,
+            item_exporter=item_exporter,
+            web3=web3,
+            contract_addresses=contract_addresses,
+            abi=abi
+        )
         self.encode_price = None
         self.eth_price = None
         self.web3_ = web3_
@@ -148,7 +167,7 @@ class ExportLendingEvent(ExportEvent):
                         self.eth_token_price_call.append(call_eth_price)
 
     def get_t_token_assets(self, pool):
-        contract = self.web3_.eth.contract(address=pool, abi=self.abi)
+        contract = self.web3.eth.contract(address=pool, abi=self.abi)
         assets_addresses = contract.functions.getReservesList().call()
         return assets_addresses
 

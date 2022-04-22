@@ -38,9 +38,9 @@ from constants.abi_constants import ABI
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--last-synced-block-file', default='last_synced_block.txt', show_default=True, type=str, help='')
 @click.option('--lag', default=0, show_default=True, type=int, help='The number of blocks to lag behind the network.')
-@click.option('-pf', '--provider-uri-full-node', required=True, type=str,
+@click.option('-pf', '--provider-uri-full-node', type=str,
               help='The URI of the web3 provider e.g. file://$HOME/Library/blockchain/geth.ipc or http://localhost:8545/')
-@click.option('-pa', '--provider-uri-archive-node', required=True, type=str,
+@click.option('-pa', '--provider-uri-archive-node', type=str,
               help='The URI of the web3 provider e.g. file://$HOME/Library/blockchain/geth.ipc or http://localhost:8545/')
 @click.option('-o', '--output', default='-', show_default=True, type=str,
               help='The output file. If not specified stdout is used.')
@@ -66,15 +66,12 @@ from constants.abi_constants import ABI
               show_default=True, type=str, help='event collector id')
 @click.option('--event-collector-id-history', default="lending_events",
               show_default=True, type=str, help='event collector id')
-@click.option('--transaction-collector-id', default="transaction_collector_id",
-              show_default=True, type=str, help='transaction collector id')
 def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_node, provider_uri_archive_node, output,
                                  db_prefix="", start_block=None, end_block=None,
                                  period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
                                  contract_addresses=None, oracle_address=None, abi='trava_lending_abi',
                                  log_file=None, pid_file=None, event_collector_id="lending_events",
-                                 event_collector_id_history="lending_events",
-                                 transaction_collector_id='transaction_collector_id'):
+                                 event_collector_id_history="lending_events"):
     """Collect token transfer events."""
     logging_basic_config(filename=log_file)
     logger = logging.getLogger('Streamer')
@@ -93,7 +90,7 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
     streamer_adapter = EthLendingLogStreamerAdapter(
         contract_addresses=list(contract_addresses),
         oracle_address=oracle_address,
-        provider_uri_full_node=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri_full_node, batch=True)),
+        provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri_full_node, batch=True)),
         provider_uri_archive_node=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri_archive_node,
                                                                                  batch=True)),
         client_querier_full_node=client_querier_full_node,
@@ -102,8 +99,7 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
                                                            collector_id=event_collector_id),
         batch_size=collector_batch_size,
         max_workers=max_workers,
-        collector_id=transaction_collector_id,
-        abi=abi
+        abi=get_abi(abi)
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,

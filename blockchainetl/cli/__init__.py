@@ -31,5 +31,6 @@ from blockchainetl.cli.export_lending_event_stream import stream_lending_log_col
 def cli(ctx):
     pass
 
+
 cli.add_command(stream_lending_log_collector, "stream_lending_log_collector")
 cli.add_command(stream_event_collector, "stream_event_collector")
