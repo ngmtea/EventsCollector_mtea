@@ -1,8 +1,5 @@
 import os
 import random
-from artifacts.abi.multi_sig_wallet import MULTI_SIG_WALLET
-from artifacts.abi.multi_sig_wallet_factory import MULTI_SIG_WALLET_FACTORY
-from artifacts.abi.recorder import RECORDER
 
 
 class Config:
@@ -26,7 +23,25 @@ class MongoDBConfig:
     COLLECTORS = "collectors"
     WALLETS = "wallets"
     LENDING_EVENTS = 'lending_events'
-    EVENTS = 'events'
+    EVENTS = ['lending_events']
+
+
+class Providers:
+    # full nodes
+    # archive nodes
+    BSC_PUBLIC_ARCHIVE_NODE = ['https://bsc-dataseed1.binance.org/', 'https://bsc-dataseed.binance.org/',
+                               'https://bsc-dataseed1.defibit.io/', 'https://bsc-dataseed1.ninicoin.io/',
+                               'https://speedy-nodes-nyc.moralis.io/d50cdc2c637838fcf416892c/bsc/mainnet/archive']
+    # BSC_PUBLIC_ARCHIVE_NODE = ['https://speedy-nodes-nyc.moralis.io/892851844778bc31eb9f6b6e/bsc/mainnet/archive']
+    # Free moralis
+    # BSC_MORALIS_ARCHIVE_NODE = ['https://speedy-nodes-nyc.moralis.io/c1bd46ded7f4386e6977d12b/bsc/mainnet/archive']
+    # Pro moralis
+    BSC_MORALIS_ARCHIVE_NODE = ['https://speedy-nodes-nyc.moralis.io/d50cdc2c637838fcf416892c/bsc/mainnet/archive']
+
+    BSC_PRIVATE_ARCHIVE_NODE = ['https://nd-521-402-221.p2pify.com/ee664ddae220517339d465993956f79f']
+
+    def get_other_provider_uri(self):
+        return random.choice(self.BSC_PUBLIC_ARCHIVE_NODE)
 
 
 class SIZES:
@@ -40,55 +55,3 @@ class SIZES:
     TIME_SLEEP = 0
     SYNC_TIME = UPDATE_SIZE * 3 + 6000
     # SYNC_TIME = 10
-
-
-class Contracts:
-    MultiSigFactory = {
-        'addresses': {
-            'kovan': "0xCDA456FEf9aDCb651CcD58Ed6687c0e96FB3f02F",
-            'ropsten': "0xCDA456FEf9aDCb651CcD58Ed6687c0e96FB3f02F",
-            'rinkeby': "0x98ee4AbDb529668fcc7D9291D61CAe4B64DE3aBa"
-        },
-        'abi': MULTI_SIG_WALLET_FACTORY,
-    }
-    TravaToken = {
-        'addresses': {
-            'kovan': "0x0D176Cb7D9CD4838173BC35e093d7c3eC0A10CA8",
-            'ropsten': "0x0D176Cb7D9CD4838173BC35e093d7c3eC0A10CA8",
-            'rinkeby': "0xB25719D8408696872ff38c445290fab0F117d201"
-        },
-        'abi': MULTI_SIG_WALLET,
-    }
-    Recoder = {
-        'addresses': {
-            'kovan': "0xDA9CF05f45A309d4fFdc85188F11c04F4D772640",
-            'ropsten': "0xDA9CF05f45A309d4fFdc85188F11c04F4D772640",
-            'rinkeby': "0xeAb6AE2d09051ACb6876CD1bc608202E2fd7fb6b"
-        },
-        'abi': RECORDER,
-    }
-    contracts = {
-        'multi_sig_factory': MultiSigFactory,
-        'trava_token': TravaToken,
-        'recoder': Recoder
-    }
-
-
-class Networks:
-    Kovan = {
-        'provider': ['https://eth-kovan.alchemyapi.io/v2/ZvZEjsjUaSUJsatHIqdi9n832zW4PPAD'],
-        'db_prefix': 'kovan',
-    }
-    Ropsten = {
-        'provider': ['https://eth-ropsten.alchemyapi.io/v2/6-4ym1CfcELADjm9VVFIOpvkh71FhVjo'],
-        'db_prefix': 'ropsten'
-    }
-    Rinkeby = {
-        'provider': ['https://eth-rinkeby.alchemyapi.io/v2/SluErBaJPnPl9PSGUYKtyoNl5cMf06hW'],
-        'db_prefix': 'rinkeby'
-    }
-    networks = {
-        'kovan': Kovan,
-        'rinkeby': Rinkeby,
-        'ropsten': Ropsten
-    }

@@ -21,6 +21,6 @@
 # SOFTWARE.
 
 
-from ethereumetl.cli import cli
+from blockchainetl.cli import cli
 
 cli()

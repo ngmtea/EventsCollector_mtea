@@ -24,7 +24,7 @@
 import itertools
 import warnings
 
-from ethereumetl.misc.retriable_value_error import RetriableValueError
+from blockchainetl.misc.retriable_value_error import RetriableValueError
 
 
 def hex_to_dec(hex_string):
