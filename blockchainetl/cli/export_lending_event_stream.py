@@ -75,7 +75,6 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
     """Collect token transfer events."""
     logging_basic_config(filename=log_file)
     logger = logging.getLogger('Streamer')
-    
 
     # TODO: Implement fallback mechanism for provider uris instead of picking randomly
     provider_uri_full_node = pick_random_provider_uri(provider_uri_full_node)
@@ -96,7 +95,7 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
         client_querier_full_node=client_querier_full_node,
         client_querier_archive_node=client_querier_archive_node,
         item_exporter=create_steaming_exporter(output=output, db_prefix=db_prefix,
-                                                           collector_id=event_collector_id),
+                                               collector_id=event_collector_id),
         batch_size=collector_batch_size,
         max_workers=max_workers,
         abi=get_abi(abi)

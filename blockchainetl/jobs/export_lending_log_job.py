@@ -84,6 +84,8 @@ class ExportLendingEvent(ExportEvent):
         _LOGGER.info(f'Crawled {len(self.event_data)} events from {self.start_block} to {self.end_block}!')
 
     def _export(self):
+        abi_transfer = self.receipt_log.build_list_info_event(ERC20_ABI)[0]
+        self.event_info[abi_transfer[1]] = abi_transfer[0]
         self.batch_work_executor.execute(
             range(self.start_block, self.end_block + 1),
             self.export_batch

@@ -30,10 +30,17 @@ class ExportEvent(BaseJob):
         self.batch_work_executor = BatchWorkExecutor(batch_size, max_workers)
         self.receipt_log = EthReceiptLendingLogMapper()
         self.localstorage = MemoryStorage.getInstance()
+        self.event_info = {}
+        self.topics = []
 
     def _start(self):
         self.event_data = []
         self.list_abi = self.receipt_log.build_list_info_event(self.abi)
+
+        for abi in self.list_abi:
+            self.event_info[abi[1]] = abi[0]
+            self.topics.append(abi[1])
+
         self.item_exporter.open()
         _LOGGER.info(f'start crawl events')
 
@@ -51,10 +58,10 @@ class ExportEvent(BaseJob):
 
     def export_batch(self, block_number_batch):
         _LOGGER.info(f'crawling event data from {block_number_batch[0]} to {block_number_batch[-1]}')
-        for abi in self.list_abi:
-            e_list = self.export_events(block_number_batch[0], block_number_batch[-1], abi[0], abi[1],
-                                        pools=self.contract_addresses)
-            self.event_data += e_list
+        # for abi in self.list_abi:
+        e_list = self.export_events(block_number_batch[0], block_number_batch[-1], event_subscriber=self.event_info,
+                                    topic=self.topics, pools=self.contract_addresses)
+        self.event_data += e_list
 
     def export_events(self, start_block, end_block, event_subscriber, topic, pools=None):
         filter_params = {
@@ -70,7 +77,7 @@ class ExportEvent(BaseJob):
         events_list = []
         for event in events:
             log = self.receipt_log.web3_dict_to_receipt_log(event)
-            eth_event = self.receipt_log.extract_event_from_log(log, event_subscriber)
+            eth_event = self.receipt_log.extract_event_from_log(log, event_subscriber[log.topics[0]])
             if eth_event is not None:
                 eth_event_dict = self.receipt_log.eth_event_to_dict(eth_event)
                 transaction_hash = eth_event_dict.get(Event.transaction_hash)
