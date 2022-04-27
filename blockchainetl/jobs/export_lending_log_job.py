@@ -4,7 +4,7 @@ from artifacts.abi.erc20_abi import ERC20_ABI
 from constants.lending_pool_constant import PoolConstant
 from query_state_lib.base.mappers.eth_call_mapper import EthCall
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
-from ethereumetl.jobs.export_event_job import ExportEvent
+from blockchainetl.jobs.event_exporter import ExportEvent
 from query_state_lib.base.utils.encoder import encode_eth_call_data
 from web3 import Web3
 from artifacts.abi.chainlink_abi import CHAINLINK_ABI
