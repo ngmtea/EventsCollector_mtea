@@ -66,12 +66,15 @@ from constants.abi_constants import ABI
               show_default=True, type=str, help='event collector id')
 @click.option('--event-collector-id-history', default="lending_events",
               show_default=True, type=str, help='event collector id')
+@click.option('--transaction-collector-id', default=None,
+              show_default=True, type=str, help='transaction collector id')
 def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_node, provider_uri_archive_node, output,
                                  db_prefix="", start_block=None, end_block=None,
                                  period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
                                  contract_addresses=None, oracle_address=None, abi='trava_lending_abi',
                                  log_file=None, pid_file=None, event_collector_id="lending_events",
-                                 event_collector_id_history="lending_events"):
+                                 event_collector_id_history="lending_events",
+                                 transaction_collector_id=None):
     """Collect token transfer events."""
     logging_basic_config(filename=log_file)
     logger = logging.getLogger('Streamer')
@@ -98,7 +101,8 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
                                                collector_id=event_collector_id),
         batch_size=collector_batch_size,
         max_workers=max_workers,
-        abi=get_abi(abi)
+        abi=get_abi(abi),
+        collector_id=transaction_collector_id
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,

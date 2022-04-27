@@ -6,8 +6,6 @@ from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.mappers.receipt_lending_log_mapper import EthReceiptLendingLogMapper
 from constants.event_constant import Event
 
-
-
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -20,7 +18,7 @@ class ExportEvent(BaseJob):
                  item_exporter,
                  web3,
                  contract_addresses,
-                 abi=LENDING_POOL_ABI,):
+                 abi=LENDING_POOL_ABI, ):
         self.web3 = web3
         self.abi = abi
         self.item_exporter = item_exporter

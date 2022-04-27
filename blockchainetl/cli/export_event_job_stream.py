@@ -59,11 +59,13 @@ from constants.abi_constants import ABI
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
 @click.option('--event-collector-id', default="events",
               show_default=True, type=str, help='event collector id')
+@click.option('--transaction-collector-id', default=None,
+              show_default=True, type=str, help='transaction collector id')
 def stream_event_collector(last_synced_block_file, lag, provider, output,
                            db_prefix="", start_block=None, end_block=None,
                            period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
                            contract_addresses=None, abi='trava_lending_abi',
-                           log_file=None, pid_file=None, event_collector_id="events"):
+                           log_file=None, pid_file=None, event_collector_id="events", transaction_collector_id=None):
     """Collect events."""
     logging_basic_config(filename=log_file)
     logger = logging.getLogger('Stream_event_collector')
@@ -79,7 +81,8 @@ def stream_event_collector(last_synced_block_file, lag, provider, output,
         item_exporter=create_steaming_exporter(output=output, db_prefix=db_prefix,
                                                collector_id=event_collector_id),
         batch_size=collector_batch_size,
-        max_workers=max_workers
+        max_workers=max_workers,
+        collector_id=transaction_collector_id
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,

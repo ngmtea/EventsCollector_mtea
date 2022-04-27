@@ -22,14 +22,17 @@ class EthLendingLogStreamerAdapter(EventStreamerAdapter):
             batch_size=96,
             max_workers=8,
             abi=LENDING_POOL_ABI,
-            oracle_abi=TRAVA_ORACLE_ABI):
+            oracle_abi=TRAVA_ORACLE_ABI,
+            collector_id=None
+    ):
         super().__init__(
             contract_addresses=contract_addresses,
             item_exporter=item_exporter,
             provider=provider,
             batch_size=batch_size,
             max_workers=max_workers,
-            abi=abi
+            abi=abi,
+            collector_id=collector_id
         )
         self.oracle_abi = oracle_abi
         self.oracle_address = oracle_address

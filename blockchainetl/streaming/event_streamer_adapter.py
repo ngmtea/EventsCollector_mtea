@@ -15,7 +15,8 @@ class EventStreamerAdapter:
             provider,
             batch_size=96,
             max_workers=8,
-            abi=LENDING_POOL_ABI
+            abi=LENDING_POOL_ABI,
+            collector_id=None
     ):
         self.abi = abi
         self.provider = provider
@@ -25,6 +26,7 @@ class EventStreamerAdapter:
         self.batch_size = batch_size
         self.max_workers = max_workers
         self.contract_addresses = [Web3.toChecksumAddress(i) for i in contract_addresses]
+        self.collector_id = collector_id
         """
         log performance realtime for mr.dat
         """
@@ -38,7 +40,11 @@ class EventStreamerAdapter:
         self.item_exporter.open()
 
     def get_current_block_number(self):
-        block_number = self.w3.eth.blockNumber
+        if self.collector_id:
+            collector = self.item_exporter.get_collector(collector_id=self.collector_id)
+            block_number = collector.get('last_updated_at_block_number')
+        else:
+            block_number = self.w3.eth.blockNumber
         return int(block_number)
 
     def export_all(self, start_block, end_block):
