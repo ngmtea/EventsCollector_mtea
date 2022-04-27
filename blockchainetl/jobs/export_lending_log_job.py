@@ -1,12 +1,12 @@
-from data_storage.memory_storage import MemoryStorage
 import logging
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.erc20_abi import ERC20_ABI
 from constants.lending_pool_constant import PoolConstant
 from query_state_lib.base.mappers.eth_call_mapper import EthCall
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
-from blockchainetl.jobs.event_exporter import ExportEvent
+from ethereumetl.jobs.export_event_job import ExportEvent
 from query_state_lib.base.utils.encoder import encode_eth_call_data
+from web3 import Web3
 from artifacts.abi.chainlink_abi import CHAINLINK_ABI
 from artifacts.abi.lending_pool_abi import LENDING_POOL_ABI
 
@@ -67,12 +67,24 @@ class ExportLendingEvent(ExportEvent):
         self.client_querier_full_node = client_querier_full_node
 
     def get_token_info(self):
+        self.tTokens = []
+        self.listAssets = []
         for i in self.contract_addresses:
             self.check_aave_v2(i)
-            list_assets = self.get_t_token_assets(i)
+            t_tokens, list_assets = self.get_t_token_assets(i)
             self.listAssets += list_assets
+            self.tTokens += t_tokens
+
         self.listAssets = list(set(self.listAssets))
+        self.tTokens = list(set(self.tTokens))
+        self.tokens = self.contract_addresses + self.tTokens
         self.encode_price = self._encode_price()
+
+    def export_batch(self, block_number_batch):
+        _LOGGER.info(f'crawling event data from {block_number_batch[0]} to {block_number_batch[-1]}')
+        e_list = self.export_events(block_number_batch[0], block_number_batch[-1], event_subscriber=self.event_info,
+                                    topic=self.topics, pools=self.tokens)
+        self.event_data += e_list
 
     def _end(self):
         self.batch_work_executor.shutdown()
@@ -86,6 +98,7 @@ class ExportLendingEvent(ExportEvent):
     def _export(self):
         abi_transfer = self.receipt_log.build_list_info_event(ERC20_ABI)[0]
         self.event_info[abi_transfer[1]] = abi_transfer[0]
+        self.topics.append(abi_transfer[1])
         self.batch_work_executor.execute(
             range(self.start_block, self.end_block + 1),
             self.export_batch
@@ -171,7 +184,22 @@ class ExportLendingEvent(ExportEvent):
     def get_t_token_assets(self, pool):
         contract = self.web3.eth.contract(address=pool, abi=self.abi)
         assets_addresses = contract.functions.getReservesList().call()
-        return assets_addresses
+        assets, t_tokens = {}, []
+        for asset_address in assets_addresses:
+
+            asset_info = contract.functions.getReserveData(asset_address).call()
+            if Web3.isAddress(asset_info[6]):
+                t_token = asset_info[6]
+                debt_token = asset_info[7]
+
+            else:
+                t_token = asset_info[7]
+                debt_token = asset_info[9]
+
+            assets[t_token.lower()] = asset_address.lower()
+            t_tokens.append(t_token)
+        assets_addresses = [i.lower() for i in assets_addresses]
+        return t_tokens, assets_addresses
 
     def _encode_price(self):
         result = {}
@@ -181,6 +209,6 @@ class ExportLendingEvent(ExportEvent):
         return result
 
     def check_aave_v2(self, address):
-        if address.lower() == "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9":
+        if address.lower() == PoolConstant.mapping["aave_v2"]["address"]:
             self.eth_price = encode_eth_call_data(abi=CHAINLINK_ABI, fn_name='latestRoundData', args=[])
         return
