@@ -23,6 +23,7 @@ import click
 
 from blockchainetl.cli.export_event_job_stream import stream_event_collector
 from blockchainetl.cli.export_lending_event_stream import stream_lending_log_collector
+from blockchainetl.cli.handle_miss_events import stream_missed_lending_event_collector
 
 
 @click.group()
@@ -34,3 +35,4 @@ def cli(ctx):
 
 cli.add_command(stream_lending_log_collector, "stream_lending_log_collector")
 cli.add_command(stream_event_collector, "stream_event_collector")
+cli.add_command(stream_missed_lending_event_collector, "stream_missed_lending_event_collector")

@@ -209,6 +209,6 @@ class ExportLendingEvent(ExportEvent):
         return result
 
     def check_aave_v2(self, address):
-        if address.lower() == PoolConstant.mapping["aave_v2"]["address"]:
+        if address.lower() == PoolConstant.mapping["aave-v2"]["address"]:
             self.eth_price = encode_eth_call_data(abi=CHAINLINK_ABI, fn_name='latestRoundData', args=[])
         return

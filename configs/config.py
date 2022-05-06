@@ -24,6 +24,7 @@ class MongoDBConfig:
     WALLETS = "wallets"
     LENDING_EVENTS = 'lending_events'
     EVENTS = ['lending_events']
+    CONNECTION_URL = f'mongodb://{NAME}:{PASSWORD}@{HOST}:{PORT}'
 
 
 class Providers:
@@ -55,3 +56,11 @@ class SIZES:
     TIME_SLEEP = 0
     SYNC_TIME = UPDATE_SIZE * 3 + 6000
     # SYNC_TIME = 10
+
+
+class ArangoDBConfig:
+    ARANGODB_HOST = os.environ.get("ARANGODB_HOST", '0.0.0.0')
+    ARANGODB_PORT = os.environ.get("ARANGODB_PORT", '8529')
+    CONNECTION_URL = f"http://{ARANGODB_HOST}:{ARANGODB_PORT}"
+    USERNAME = os.environ.get("ARANGODB_USERNAME", "root")
+    PASSWORD = os.environ.get("ARANGODB_PASSWORD", "dev123")
