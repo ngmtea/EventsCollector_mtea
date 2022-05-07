@@ -13,20 +13,17 @@ oracle_address=${12}
 db_prefix=${13}
 
 lower_lending="${lending,,}"
-echo $timestamp
-echo $importer
-echo $exporter
 
 echo start update from $start_block to $end_block
 
 echo start update enricher
 cd ../Enricher
 source venv/bin/activate
-if [ -z"$db_prefix" ]
+if [ "$db_prefix" == "" ]
 then
-python3 main.py stream_lending_enricher --lending-abi $abi -p $provider_archive_node -i $importer -o $importer -ca $lending -b 1000 -B 5000 --collector-id "lending_events" -s $start_block -e $end_block -l $last_synced_block
+  python3 main.py stream_lending_enricher --lending-abi $abi -p $provider_archive_node -i $importer -o $importer -ca $lending -b 1000 -B 5000 --collector-id "lending_events" -s $start_block -e $end_block -l $last_synced_block
 else
-python3 main.py stream_lending_enricher --lending-abi $abi -p $provider_archive_node -i $importer -o $importer -ca $lending -b 1000 -B 5000 --collector-id "lending_events" -s $start_block -e $end_block -l $last_synced_block --db-prefix $db_prefix
+  python3 main.py stream_lending_enricher --lending-abi $abi -p $provider_archive_node -i $importer -o $importer -ca $lending -b 1000 -B 5000 --collector-id "lending_events" -s $start_block -e $end_block -l $last_synced_block --db-prefix $db_prefix
 fi
 rm $last_synced_block
 
@@ -35,11 +32,11 @@ echo update enricher done!
 echo start update graploader
 cd ../GraphLoader
 source venv/bin/activate
-if [ -z"$db_prefix" ]
+if [ "$db_prefix" == "" ]
 then
-python3 ekg.py stream -i $importer -o $exporter -b 20 -B 100 -w 1 --enrich-id $enricher_id --streaming-types "lending" -t $lower_lending -l $last_synced_block -s $start_block -e $end_block
+  python3 ekg.py stream -i $importer -o $exporter -b 20 -B 100 -w 1 --enrich-id $enricher_id --streaming-types "lending" -t $lower_lending -l $last_synced_block -s $start_block -e $end_block
 else
-python3 ekg.py stream -i $importer -o $exporter -b 20 -B 100 -w 1 --enrich-id $enricher_id --streaming-types "lending" -t $lower_lending -l $last_synced_block -s $start_block -e $end_block --db-prefix $db_prefix
+  python3 ekg.py stream -i $importer -o $exporter -b 20 -B 100 -w 1 --enrich-id $enricher_id --streaming-types "lending" -t $lower_lending -l $last_synced_block -s $start_block -e $end_block --db-prefix $db_prefix
 fi
 rm $last_synced_block
 
