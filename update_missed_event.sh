@@ -49,5 +49,5 @@ echo start update stategraphloader
 
 cd ../StateGraphLoader
 source .venv/bin/activate
-python3 run.py lending_data -p $provider_archive_node -m $importer -g $exporter -l $lower_lending -o $oracle_address -c $chain_id -t $timestamp -r 3600
+python3 run.py lending_data -p $provider_archive_node -m $importer -g $exporter -l $lower_lending -o $oracle_address -c $chain_id -t $timestamp -r 3600 --abi $abi
 echo update stategraphloader done!
