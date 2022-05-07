@@ -89,7 +89,7 @@ class MissedEventHanler(ExportLendingEvent):
                 "end_block": str(event["block_number"] + 1),
                 "address": self.contract_address,
                 'abi': self.pool_info['abi_type'],
-                'last_synced_block': 'last_syned_block.txt',
+                'last_synced_block': self.pool_info['last_syned_block'],
                 "provider": self.param["link_archive_node"],
                 "mongo_db": self.param["link_mongo_db"],
                 "arrango_db": self.param["link_graph_db"],

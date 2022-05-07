@@ -15,6 +15,7 @@ class PoolConstant:
             'oracle_address': '0x7cd53b71bf56cc6c9c9b43719fe98e7c360c35df',
             "enricher_id": 'enricher-default-id',
             'abi_type': 'v1',
+            'last_syned_block': "trava_bsc.txt",
         },
         'geist': {
             'name': 'geist',
@@ -27,6 +28,7 @@ class PoolConstant:
             'oracle_address': '0xC466e3FeE82C6bdc2E17f2eaF2c6F1E91AD10FD3',
             "enricher_id": 'enricher-geist-event-id',
             'abi_type': 'v2',
+            'last_syned_block': "geist_ftm.txt",
         },
         'trava-ftm': {
             'name': 'trava_ftm',
@@ -39,6 +41,7 @@ class PoolConstant:
             'oracle_address': '0x290346e682d51b97e2c1f186eb61eb49881c5ec7',
             "enricher_id": 'enricher-default-id',
             'abi_type': 'v1',
+            'last_syned_block': "trava_ftm.txt",
         },
         'trava-eth': {
             'name': 'trava-eth',
@@ -51,6 +54,7 @@ class PoolConstant:
             'oracle_address': '0x2bd81260fe864173b6ec1ec9ee41a76366922565',
             "enricher_id": 'enricher-default-id',
             'abi_type': 'v1',
+            'last_syned_block': "trava_eth.txt",
         },
         'aave-v2': {
             'name': 'aave-v2',
@@ -63,6 +67,7 @@ class PoolConstant:
             'oracle_address': '0xA50ba011c48153De246E5192C8f9258A2ba79Ca9',
             "enricher_id": "enricher-aave-v2",
             'abi_type': 'v2',
+            'last_syned_block': "aave_v2.txt",
         },
     }
     token_type = ['reserve', 'debtAsset', 'collateralAsset']
