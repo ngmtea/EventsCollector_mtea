@@ -17,7 +17,7 @@ def run(params):
     str += params["oracle_address"]+" "
     str += params["db_prefix"]
     # print(str)
-    # str += "15041790 15051890 0x75DE5f7c91a89C16714017c7443eca20C7a8c295 https://nd-384-319-366.p2pify.com/7e49b20f53222da5f0b4517cd1da43ef v1 "
+    # str += "15041790 15051890 0x75DE5f7c91a89C16714017c7443eca20C7a8c295 https://nd-384-319-366.p2pify.com/ v1 "
     # str += "mongodb://localhost:27017/ arangodb@root:20011999@http://localhost:8529 last_synced_block.txt enricher-default-id 1644219999 0x38 0x7cd53b71bf56cc6c9c9b43719fe98e7c360c35df"
 
     os.system(str)
