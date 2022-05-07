@@ -64,8 +64,6 @@ from constants.abi_constants import ABI
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
 @click.option('--event-collector-id', default="lending_events",
               show_default=True, type=str, help='event collector id')
-@click.option('--event-collector-id-history', default="lending_events",
-              show_default=True, type=str, help='event collector id')
 @click.option('--transaction-collector-id', default=None,
               show_default=True, type=str, help='transaction collector id')
 def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_node, provider_uri_archive_node, output,
@@ -73,7 +71,6 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
                                  period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
                                  contract_addresses=None, oracle_address=None, abi='trava_lending_abi',
                                  log_file=None, pid_file=None, event_collector_id="lending_events",
-                                 event_collector_id_history="lending_events",
                                  transaction_collector_id=None):
     """Collect token transfer events."""
     logging_basic_config(filename=log_file)
@@ -113,7 +110,7 @@ def stream_lending_log_collector(last_synced_block_file, lag, provider_uri_full_
         period_seconds=period_seconds,
         block_batch_size=streamer_batch_size,
         pid_file=pid_file,
-        stream_id=event_collector_id_history,
+        stream_id=event_collector_id,
         output=output,
         db_prefix=db_prefix
     )
