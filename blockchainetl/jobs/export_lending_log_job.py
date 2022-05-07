@@ -67,12 +67,14 @@ class ExportLendingEvent(ExportEvent):
         self.client_querier_full_node = client_querier_full_node
 
     def get_token_info(self):
+        self.assets = {}
         self.tTokens = []
         self.listAssets = []
         for i in self.contract_addresses:
             self.check_aave_v2(i)
-            t_tokens, list_assets = self.get_t_token_assets(i)
+            assets, t_tokens, list_assets = self.get_t_token_assets(i)
             self.listAssets += list_assets
+            self.assets.update(assets)
             self.tTokens += t_tokens
 
         self.listAssets = list(set(self.listAssets))
@@ -114,6 +116,8 @@ class ExportLendingEvent(ExportEvent):
             eth_price = self.client_querier_archive_node.sent_batch_to_provider(self.eth_token_price_call)
         result = []
         for event in self.event_data:
+            if event['contract_address'] in self.assets.keys():
+                event['asset'] = self.assets[event['contract_address']]
             event['block_timestamp'] = int(block_transaction[event['_id'] + '_block'].result['timestamp'], 16)
             event['wallet'] = str(block_transaction[event['_id'] + '_transaction'].result['from']).lower()
             for i in PoolConstant.token_type:
@@ -199,7 +203,7 @@ class ExportLendingEvent(ExportEvent):
             assets[t_token.lower()] = asset_address.lower()
             t_tokens.append(t_token)
         assets_addresses = [i.lower() for i in assets_addresses]
-        return t_tokens, assets_addresses
+        return assets, t_tokens, assets_addresses
 
     def _encode_price(self):
         result = {}

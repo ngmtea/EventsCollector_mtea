@@ -111,6 +111,8 @@ class MissedEventHanler(ExportLendingEvent):
             eth_price = self.client_querier_archive_node.sent_batch_to_provider(self.eth_token_price_call)
         result = []
         for event in self.miss_events:
+            if event['contract_address'] in self.assets.keys():
+                event['asset'] = self.assets[event['contract_address']]
             event['block_timestamp'] = int(block_transaction[event['_id'] + '_block'].result['timestamp'], 16)
             event['wallet'] = str(block_transaction[event['_id'] + '_transaction'].result['from']).lower()
             for i in PoolConstant.token_type:
