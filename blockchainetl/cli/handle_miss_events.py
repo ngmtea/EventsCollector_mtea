@@ -64,8 +64,6 @@ from constants.abi_constants import ABI
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
 @click.option('--event-collector-id', default="lending_events",
               show_default=True, type=str, help='event collector id')
-@click.option('--event-collector-id-history', default="lending_events",
-              show_default=True, type=str, help='event collector id')
 @click.option('--transaction-collector-id', default=None,
               show_default=True, type=str, help='transaction collector id')
 @click.option('--graph-db', default=None,
@@ -77,7 +75,6 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
                                           max_workers=5, contract_address=None,
                                           oracle_address=None, abi='trava_lending_abi',
                                           log_file=None, pid_file=None, event_collector_id="lending_events",
-                                          event_collector_id_history="lending_events",
                                           transaction_collector_id=None, graph_db=None,
                                           ):
     """Collect token transfer events."""
@@ -123,7 +120,7 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
         period_seconds=period_seconds,
         block_batch_size=streamer_batch_size,
         pid_file=pid_file,
-        stream_id=event_collector_id_history,
+        stream_id=event_collector_id,
         output=output,
         db_prefix=db_prefix,
     )
