@@ -11,18 +11,17 @@ class MongodbStreamingExporter(object):
     """Manages connection to  database and makes async queries
     """
 
-    def __init__(self, connection_url, collector_id, db_prefix=""):
+    def __init__(self, connection_url, collector_id=MongoDBConfig.LENDING_EVENTS, db_prefix="", database=MongoDBConfig.DATABASE):
         self._conn = None
         # url = f"mongodb://{MongoDBConfig.NAME}:{MongoDBConfig.PASSWORD}@{MongoDBConfig.HOST}:{MongoDBConfig.PORT}"
         url = connection_url
         self.mongo = MongoClient(url)
         if db_prefix:
-            mongo_db_str = db_prefix + "_" + MongoDBConfig.DATABASE
+            mongo_db_str = db_prefix + "_" + database
         else:
-            mongo_db_str = MongoDBConfig.DATABASE
+            mongo_db_str = database
         self.mongo_db = self.mongo[mongo_db_str]
         self.mongo_collectors = self.mongo_db[MongoDBConfig.COLLECTORS]
-        self.event = self.mongo_db[MongoDBConfig.LENDING_EVENTS]
         for collector in MongoDBConfig.EVENTS:
             if collector in collector_id:
                 self.event = self.mongo_db[collector]

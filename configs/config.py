@@ -23,7 +23,7 @@ class MongoDBConfig:
     COLLECTORS = "collectors"
     WALLETS = "wallets"
     LENDING_EVENTS = 'lending_events'
-    EVENTS = ['lending_events']
+    EVENTS = ['lending_events', 'lp_events']
     CONNECTION_URL = f'mongodb://{NAME}:{PASSWORD}@{HOST}:{PORT}'
 
 

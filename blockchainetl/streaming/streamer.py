@@ -25,6 +25,8 @@ import logging
 import os
 import time
 
+from configs.config import MongoDBConfig
+
 from blockchainetl.utils.file_utils import smart_open
 from blockchainetl.streaming.streamer_adapter_stub import StreamerAdapterStub
 from configs.blockchain_etl_config import BlockchainEtlConfig
@@ -45,7 +47,8 @@ class Streamer:
             pid_file=None,
             stream_id=BlockchainEtlConfig.STREAM_ID,
             output=BlockchainEtlConfig.OUTPUT,
-            db_prefix=""
+            db_prefix="",
+            database = MongoDBConfig.DATABASE
     ):
         self.blockchain_streamer_adapter = blockchain_streamer_adapter
         self.last_synced_block_file = last_synced_block_file
@@ -57,7 +60,7 @@ class Streamer:
         self.retry_errors = retry_errors
         self.pid_file = pid_file
         self.stream_id = stream_id
-        self.exporter = create_steaming_exporter(output, stream_id, db_prefix)
+        self.exporter = create_steaming_exporter(output, stream_id, db_prefix, database)
 
         if self.start_block is not None or not os.path.isfile(self.last_synced_block_file):
             init_last_synced_block_file((self.start_block or 0) - 1, self.last_synced_block_file)

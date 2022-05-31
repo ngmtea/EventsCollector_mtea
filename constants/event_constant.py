@@ -5,3 +5,21 @@ class Event:
     transaction_hash = 'transaction_hash'
     log_index = 'log_index'
     block_number = 'block_number'
+
+
+class EventTypes:
+    swap = 'SWAP'
+    mint = 'MINT'
+    burn = 'BURN'
+    deposit = 'DEPOSIT'
+    borrow = 'BORROW'
+    withdraw = 'WITHDRAW'
+    repay = 'REPAY'
+    liquidate = 'LIQUIDATE'
+
+
+class StreamerTypes:
+    events = "events"
+    lending_events = "lending_events"
+    trava_lp_events = "trava_lp_events"
+    all = [events, lending_events, trava_lp_events]
