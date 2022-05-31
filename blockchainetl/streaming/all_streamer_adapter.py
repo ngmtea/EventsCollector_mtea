@@ -7,7 +7,7 @@ from blockchainetl.jobs.export_lending_log_job import ExportLendingEvent
 from blockchainetl.streaming.event_streamer_adapter import EventStreamerAdapter
 from constants.event_constant import *
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
-from artifacts.abi.lending_pool_abi import LENDING_POOL_ABI
+from artifacts.abi.lending.lending_pool_abi import LENDING_POOL_ABI
 from blockchainetl.jobs.event_exporter import ExportEvent
 from blockchainetl.jobs.trava_lp_event_exporter import ExportEventTravaLP
 

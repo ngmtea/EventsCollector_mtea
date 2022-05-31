@@ -28,6 +28,7 @@ import click
 from configs.config import MongoDBConfig
 
 from constants.event_constant import StreamerTypes
+from constants.trava_vaults import TRAVA_VAULTS_ADDRESSES
 from utils.logging_utils import logging_basic_config
 from blockchainetl.providers.auto import get_provider_from_uri
 from blockchainetl.utils.thread_local_proxy import ThreadLocalProxy
@@ -41,9 +42,9 @@ from constants.abi_constants import ABI
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--last-synced-block-file', default='last_synced_block.txt', show_default=True, type=str, help='')
 @click.option('--lag', default=0, show_default=True, type=int, help='The number of blocks to lag behind the network.')
-@click.option('-pf', '--provider-uri-full-node', type=str,
+@click.option('-pf', '--provider-uri-full-node', type=str, default=None,
               help='The URI of the web3 provider e.g. file://$HOME/Library/blockchain/geth.ipc or http://localhost:8545/')
-@click.option('-pa', '--provider-uri-archive-node', type=str,
+@click.option('-pa', '--provider-uri-archive-node', type=str, default=None,
               help='The URI of the web3 provider e.g. file://$HOME/Library/blockchain/geth.ipc or http://localhost:8545/')
 @click.option('-o', '--output', default='-', show_default=True, type=str,
               help='The output file. If not specified stdout is used.')
@@ -73,11 +74,11 @@ from constants.abi_constants import ABI
               show_default=True, type=str, help='transaction collector id')
 @click.option('--streamer-types', default=StreamerTypes.all,
               show_default=True, type=str, multiple=True, help='transaction collector id')
-def stream(last_synced_block_file, lag, provider_uri_full_node, provider_uri_archive_node, output,
+def stream(last_synced_block_file, lag, provider_uri_full_node=None, provider_uri_archive_node=None, output=None,
            db_prefix="", start_block=None, end_block=None,
            period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
            contract_addresses=None, oracle_address=None, abi='trava_lending_abi',
-           log_file=None, pid_file=None, database_name=MongoDBConfig.DATABASE,event_collector_id="events",
+           log_file=None, pid_file=None, database_name=MongoDBConfig.DATABASE, event_collector_id="events",
            transaction_collector_id=None, streamer_types=StreamerTypes.all):
     """Collect token transfer events."""
     logging_basic_config(filename=log_file)
@@ -92,6 +93,9 @@ def stream(last_synced_block_file, lag, provider_uri_full_node, provider_uri_arc
 
     client_querier_archive_node = ClientQuerier(provider_url=provider_uri_archive_node)
     client_querier_full_node = ClientQuerier(provider_url=provider_uri_full_node)
+
+    if "vaults" in contract_addresses:
+        contract_addresses = TRAVA_VAULTS_ADDRESSES
 
     streamer_adapter = EthAllStreamerAdapter(
         contract_addresses=list(contract_addresses),

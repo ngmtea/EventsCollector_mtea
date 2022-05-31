@@ -1,5 +1,5 @@
 import logging
-from artifacts.abi.lp_token_events_abi import LP_TOKEN_EVENT_ABI
+from artifacts.abi.lending.lp_token_events_abi import LP_TOKEN_EVENT_ABI
 from blockchainetl.jobs.event_exporter import ExportEvent
 from query_state_lib.base.utils.encoder import encode_eth_call_data
 from query_state_lib.base.mappers.eth_call_mapper import EthCall

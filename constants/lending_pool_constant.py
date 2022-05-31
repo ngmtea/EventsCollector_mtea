@@ -1,5 +1,5 @@
-from artifacts.abi.lending_pool_abi import LENDING_POOL_ABI
-from artifacts.abi.lending_pool_aave_v2_abi import LENDING_POOL_AAVE_V2_ABI
+from artifacts.abi.lending.lending_pool_abi import LENDING_POOL_ABI
+from artifacts.abi.lending.lending_pool_aave_v2_abi import LENDING_POOL_AAVE_V2_ABI
 
 
 class PoolConstant:
