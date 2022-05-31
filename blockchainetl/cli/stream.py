@@ -28,7 +28,7 @@ import click
 from configs.config import MongoDBConfig
 
 from constants.event_constant import StreamerTypes
-from constants.trava_vaults import TRAVA_VAULTS_ADDRESSES
+from constants.trava_vaults import *
 from utils.logging_utils import logging_basic_config
 from blockchainetl.providers.auto import get_provider_from_uri
 from blockchainetl.utils.thread_local_proxy import ThreadLocalProxy
@@ -96,6 +96,9 @@ def stream(last_synced_block_file, lag, provider_uri_full_node=None, provider_ur
 
     if "vaults" in contract_addresses:
         contract_addresses = TRAVA_VAULTS_ADDRESSES
+
+    if "nft_vaults" in contract_addresses:
+        contract_addresses = NFT_TRAVA_VAULTS_ADDRESSES
 
     streamer_adapter = EthAllStreamerAdapter(
         contract_addresses=list(contract_addresses),
