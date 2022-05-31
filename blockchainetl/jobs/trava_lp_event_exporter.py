@@ -78,9 +78,11 @@ class ExportEventTravaLP(ExportEvent):
             if event["event_type"]==EventTypes.swap:
                 if float(event["amount0_in"]) != 0 and float(event["amount1_out"]) != 0:
                     event["ratio_between_token1_and_token0"] = float(event["amount1_out"]) / float(event["amount0_in"])
+                    event["action"] = "BUY"
 
                 elif float(event["amount0_out"]) != 0 and float(event["amount1_in"]) != 0:
                     event["ratio_between_token1_and_token0"] = float(event["amount1_in"]) / float(event["amount0_out"])
+                    event["action"] = "SELL"
 
                 else:
                     event["ratio_between_token0_and_token1"] = 0
