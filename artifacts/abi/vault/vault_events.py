@@ -49,22 +49,29 @@ VAULT_EVENT_ABI = [{
         "type": "event"
     },
     {
+        "anonymous": False,
         "inputs": [
             {
+                "indexed": True,
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "indexed": True,
                 "internalType": "address",
                 "name": "to",
                 "type": "address"
             },
             {
+                "indexed": False,
                 "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
             }
         ],
-        "name": "redeem",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        "name": "Redeem",
+        "type": "event"
     }
 
 ]
