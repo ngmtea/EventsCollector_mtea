@@ -8,6 +8,8 @@ from artifacts.abi.lending.lending_pool_aave_v1_abi import LENDING_POOL_AAVE_V1_
 from artifacts.abi.lending.lp_token_events_abi import LP_TOKEN_EVENT_ABI
 from artifacts.abi.vault.nft_vault_events import NFT_VAULT_EVENT_ABI
 from artifacts.abi.vault.vault_events import VAULT_EVENT_ABI
+from artifacts.abi.cross_chain_abi.multi_sig_wallet_event_abi import MULTI_SIG_WALLET_EVENT_ABI
+
 
 
 class ABI:
@@ -21,5 +23,6 @@ class ABI:
         "geist_abi": LENDING_POOL_GEIST_ABI,
         "lp_token_event_abi": LP_TOKEN_EVENT_ABI,
         "vault_event_abi": VAULT_EVENT_ABI,
-        "nft_vault_event_abi": NFT_VAULT_EVENT_ABI
+        "nft_vault_event_abi": NFT_VAULT_EVENT_ABI,
+        "multi_sig_event_abi": MULTI_SIG_WALLET_EVENT_ABI
     }

@@ -42,6 +42,9 @@ class MongodbStreamingExporter(object):
     def get_event_items(self, filter):
         return list(self.event.find(filter))
 
+    def get_items(self, db, collection, filter):
+        return self.mongo[db][collection].find(filter)
+
     def update_collector(self, collector):
         key = {'id': collector['id']}
         data = {"$set": collector}

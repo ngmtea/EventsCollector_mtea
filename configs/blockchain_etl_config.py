@@ -11,6 +11,6 @@ class BlockchainEtlConfig:
     PERIOD_SECONDS = os.environ.get("BLOCKCHAIN_ETL_PERIOD_SECONDS") or 10
     PID_FILE = os.environ.get("BLOCKCHAIN_ETL_PID_FILE") or None
     BLOCK_BATCH_SIZE = os.environ.get("BLOCKCHAIN_ETL_BLOCK_BATCH_SIZE") or 32
-    OUTPUT = os.environ.get("BLOCKCHAIN_ETL_OUTPUT") or "mongodb://just_for_dev:password_for_dev@localhost:27027/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+    OUTPUT = os.environ.get("BLOCKCHAIN_ETL_OUTPUT") or "mongodb://just_for_dev:password_for_dev@localhost:27027/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=False"
     ENTITY_TYPES = os.environ.get("BLOCKCHAIN_ETL_ENTITY_TYPES") or "block,transaction,log,token_transfer,trace,contract,token"
     STREAM_ID = os.environ.get("BLOCKCHAIN_ETL_STREAM_ID") or None

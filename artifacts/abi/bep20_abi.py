@@ -1,24 +1,21 @@
-import json 
-
-BEP20_ABI = json.loads('''
-[
+BEP20_ABI = [
     {
-        "anonymous": false,
+        "anonymous": False,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "owner",
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "spender",
                 "type": "address"
             },
             {
-                "indexed": false,
+                "indexed": False,
                 "internalType": "uint256",
                 "name": "value",
                 "type": "uint256"
@@ -28,22 +25,22 @@ BEP20_ABI = json.loads('''
         "type": "event"
     },
     {
-        "anonymous": false,
+        "anonymous": False,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "delegator",
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "fromDelegate",
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "toDelegate",
                 "type": "address"
@@ -53,22 +50,22 @@ BEP20_ABI = json.loads('''
         "type": "event"
     },
     {
-        "anonymous": false,
+        "anonymous": False,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "delegate",
                 "type": "address"
             },
             {
-                "indexed": false,
+                "indexed": False,
                 "internalType": "uint256",
                 "name": "previousBalance",
                 "type": "uint256"
             },
             {
-                "indexed": false,
+                "indexed": False,
                 "internalType": "uint256",
                 "name": "newBalance",
                 "type": "uint256"
@@ -78,16 +75,16 @@ BEP20_ABI = json.loads('''
         "type": "event"
     },
     {
-        "anonymous": false,
+        "anonymous": False,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "previousOwner",
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "newOwner",
                 "type": "address"
@@ -97,22 +94,22 @@ BEP20_ABI = json.loads('''
         "type": "event"
     },
     {
-        "anonymous": false,
+        "anonymous": False,
         "inputs": [
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "from",
                 "type": "address"
             },
             {
-                "indexed": true,
+                "indexed": True,
                 "internalType": "address",
                 "name": "to",
                 "type": "address"
             },
             {
-                "indexed": false,
+                "indexed": False,
                 "internalType": "uint256",
                 "name": "value",
                 "type": "uint256"
@@ -631,4 +628,3 @@ BEP20_ABI = json.loads('''
         "type": "function"
     }
 ]
-''')

@@ -25,11 +25,13 @@ import time
 import os
 import json
 import click
+from query_state_lib.client.client_querier import ClientQuerier
+
 from utils.logging_utils import logging_basic_config
 from blockchainetl.providers.auto import get_provider_from_uri
 from blockchainetl.utils.thread_local_proxy import ThreadLocalProxy
 from blockchainetl.streaming.streaming_exporter_creator import create_steaming_exporter
-from blockchainetl.streaming.event_streamer_adapter import EventStreamerAdapter
+from blockchainetl.streaming.stream_multi_sig_event_adapter import MultiSigWalletEventStreamerAdapter
 from blockchainetl.streaming.streamer import Streamer
 from constants.abi_constants import ABI
 
@@ -62,14 +64,15 @@ from constants.abi_constants import ABI
               show_default=True, type=str, help='event collector id')
 @click.option('--transaction-collector-id', default=None,
               show_default=True, type=str, help='transaction collector id')
-def stream_event_collector(last_synced_block_file, lag, provider, output,
-                           db_prefix="", database="",start_block=None, end_block=None,
-                           period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
-                           contract_addresses=None, abi='trava_lending_abi',
-                           log_file=None, pid_file=None, event_collector_id="events", transaction_collector_id=None):
+def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, output,
+                                     db_prefix="", database="", start_block=None, end_block=None,
+                                     period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
+                                     contract_addresses=None, abi='trava_lending_abi',
+                                     log_file=None, pid_file=None, event_collector_id="events",
+                                     transaction_collector_id=None):
     """Collect events."""
     logging_basic_config(filename=log_file)
-    logger = logging.getLogger('Stream_event_collector')
+    logger = logging.getLogger('Stream_multi_sig_wallet_event_collector')
     provider = pick_random_provider_uri(provider)
     logger.info(f"Start streaming from block {start_block} to block {end_block}")
     logger.info('Using full node: ' + provider)
@@ -78,14 +81,17 @@ def stream_event_collector(last_synced_block_file, lag, provider, output,
     if database:
         item = create_steaming_exporter(output=output, db_prefix=db_prefix,
                                         collector_id=event_collector_id, database=database)
-    streamer_adapter = EventStreamerAdapter(
+
+    client_querier_full_node = ClientQuerier(provider_url=provider)
+    streamer_adapter = MultiSigWalletEventStreamerAdapter(
         abi=get_abi(abi),
         contract_addresses=list(contract_addresses),
         provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider, batch=True)),
         item_exporter=item,
         batch_size=collector_batch_size,
         max_workers=max_workers,
-        collector_id=transaction_collector_id
+        collector_id=transaction_collector_id,
+        client_querier_full_node=client_querier_full_node
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
@@ -99,7 +105,7 @@ def stream_event_collector(last_synced_block_file, lag, provider, output,
         stream_id=event_collector_id,
         output=output,
         db_prefix=db_prefix,
-        database = database
+        database=database
     )
     start_time = int(time.time())
     streamer.stream()

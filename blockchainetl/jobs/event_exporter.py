@@ -1,6 +1,5 @@
 from data_storage.memory_storage import MemoryStorage
 import logging
-from artifacts.abi.lending.lending_pool_abi import LENDING_POOL_ABI
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.mappers.receipt_lending_log_mapper import EthReceiptLendingLogMapper
@@ -18,7 +17,7 @@ class ExportEvent(BaseJob):
                  item_exporter,
                  web3,
                  contract_addresses,
-                 abi=LENDING_POOL_ABI, ):
+                 abi):
         self.web3 = web3
         self.abi = abi
         self.item_exporter = item_exporter
