@@ -23,3 +23,9 @@ class StreamerTypes:
     lending_events = "lending_events"
     trava_lp_events = "trava_lp_events"
     all = [events, lending_events, trava_lp_events]
+
+
+class LendingTypes:
+    ethereum = "ethereum"
+    bsc = "bsc"
+    ftm = "ftm"

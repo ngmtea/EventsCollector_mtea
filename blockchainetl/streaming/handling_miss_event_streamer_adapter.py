@@ -1,6 +1,6 @@
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 
-from artifacts.abi.lending.lending_pool_abi import LENDING_POOL_ABI
+from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 
 from blockchainetl.streaming.lending_log_streamer_adapter import EthLendingLogStreamerAdapter
 from blockchainetl.jobs.handle_miss_events import MissedEventHanler

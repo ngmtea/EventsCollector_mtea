@@ -17,5 +17,24 @@ MULTI_SIG_WALLET_EVENT_ABI = [
         ],
         "name": "Confirmation",
         "type": "event"
+    },
+    {
+        "anonymous": False,
+        "inputs": [
+            {
+                "indexed": True,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            },
+            {
+                "indexed": True,
+                "internalType": "uint256",
+                "name": "transactionId",
+                "type": "uint256"
+            }
+        ],
+        "name": "Revocation",
+        "type": "event"
     }
 ]

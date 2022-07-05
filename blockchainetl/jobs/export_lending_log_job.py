@@ -8,7 +8,7 @@ from blockchainetl.jobs.event_exporter import ExportEvent
 from query_state_lib.base.utils.encoder import encode_eth_call_data
 from web3 import Web3
 from artifacts.abi.chainlink_abi import CHAINLINK_ABI
-from artifacts.abi.lending.lending_pool_abi import LENDING_POOL_ABI
+from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 
 _LOGGER = logging.getLogger(__name__)
 

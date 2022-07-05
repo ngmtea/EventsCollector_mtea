@@ -4,7 +4,7 @@ import pathlib
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from blockchainetl.jobs.multi_sig_wallet_event_exporter import MultiSigWalletEventExporter
-from artifacts.abi.lending.lending_pool_abi import LENDING_POOL_ABI
+from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 
 
 class MultiSigWalletEventStreamerAdapter:
