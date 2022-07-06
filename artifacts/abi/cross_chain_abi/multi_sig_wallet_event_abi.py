@@ -30,7 +30,7 @@ MULTI_SIG_WALLET_EVENT_ABI = [
             {
                 "indexed": True,
                 "internalType": "uint256",
-                "name": "transactionId",
+                "name": "transaction_id",
                 "type": "uint256"
             }
         ],
