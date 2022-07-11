@@ -110,7 +110,7 @@ class ExportLendingEvent(ExportEvent):
 
     def enrich_event(self):
         eth_price = {}
-        block_transaction = self.client_querier_full_node.sent_batch_to_provider(
+        block_transaction = self.client_querier_archive_node.sent_batch_to_provider(
             self.eth_call_full_node)
         price = self.client_querier_archive_node.sent_batch_to_provider(
             self.eth_call_archive_node)

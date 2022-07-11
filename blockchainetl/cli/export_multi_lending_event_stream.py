@@ -50,7 +50,7 @@ from blockchainetl.streaming.streamer import Streamer
 @click.option('-s', '--start-block', default=None, show_default=True, type=int, help='Start block')
 @click.option('-e', '--end-block', default=None, type=int, help='End block')
 @click.option('--period-seconds', default=1, show_default=True, type=int,
-              help='How many seconds to sleep between syncs')
+              help='How many seconds to sleepl between syncs')
 @click.option('-b', '--collector-batch-size', default=100, show_default=True, type=int,
               help='The number of blocks to filter at a time.')
 @click.option('-B', '--streamer_batch_size', default=100, show_default=True, type=int,
