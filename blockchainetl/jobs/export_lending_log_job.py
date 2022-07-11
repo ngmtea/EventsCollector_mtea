@@ -110,7 +110,7 @@ class ExportLendingEvent(ExportEvent):
 
     def enrich_event(self):
         eth_price = {}
-        block_transaction = self.client_querier_archive_node.sent_batch_to_provider(
+        block_transaction = self.client_querier_full_node.sent_batch_to_provider(
             self.eth_call_full_node)
         price = self.client_querier_archive_node.sent_batch_to_provider(
             self.eth_call_archive_node)
@@ -125,7 +125,18 @@ class ExportLendingEvent(ExportEvent):
             for i in PoolConstant.token_type:
                 if i in event.keys():
                     event[f'decimal_of_{i.replace("Asset", "_asset")}'] = self.token_get_decimals(event[i])
-                    price_token = int(price[event['_id'] + '_' + i].result, 16)
+                    try:
+                        price_token = int(price[event['_id'] + '_' + i].result, 16)
+                    except Exception as e:
+                        _LOGGER.warning(f"Can not crawl price of {event[i]}!")
+                        _LOGGER.info(f"Start crawl price before!")
+                        price_token = None
+                        block = event["block_number"]
+                        while not price_token:
+                            block -= 1
+                            price_token = self.oracle_contract.functions.getAssetPrice(
+                                self.web3.toChecksumAddress(event[i])). \
+                                call(block_identifier=block - 10)
                     if eth_price:
                         price_token = price_token * (
                                 int(eth_price[event['_id'] + '_' + i].result[66:130], 16) / 10 ** 18)
