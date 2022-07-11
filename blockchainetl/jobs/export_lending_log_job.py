@@ -40,6 +40,7 @@ class ExportLendingEvent(ExportEvent):
                  client_querier_full_node,
                  client_querier_archive_node,
                  oracle_address,
+                 event_abi,
                  abi=LENDING_POOL_ABI,
                  oracle_abi=TRAVA_ORACLE_ABI):
         super().__init__(
@@ -50,8 +51,9 @@ class ExportLendingEvent(ExportEvent):
             item_exporter=item_exporter,
             web3=web3,
             contract_addresses=contract_addresses,
-            abi=abi
+            abi=event_abi
         )
+        self.lending_abi = abi
         self.encode_price = None
         self.eth_price = None
         self.web3_ = web3_
@@ -186,7 +188,7 @@ class ExportLendingEvent(ExportEvent):
                         self.eth_token_price_call.append(call_eth_price)
 
     def get_t_token_assets(self, pool):
-        contract = self.web3.eth.contract(address=pool, abi=self.abi)
+        contract = self.web3.eth.contract(address=pool, abi=self.lending_abi)
         assets_addresses = contract.functions.getReservesList().call()
         assets, t_tokens = {}, []
         for asset_address in assets_addresses:

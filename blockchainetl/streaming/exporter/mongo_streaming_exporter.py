@@ -22,9 +22,10 @@ class MongodbStreamingExporter(object):
             mongo_db_str = database
         self.mongo_db = self.mongo[mongo_db_str]
         self.mongo_collectors = self.mongo_db[MongoDBConfig.COLLECTORS]
-        for collector in MongoDBConfig.EVENTS:
-            if collector in collector_id:
-                self.event = self.mongo_db[collector]
+        if collector_id in MongoDBConfig.EVENTS:
+            self.event = self.mongo_db[collector_id]
+        else:
+            self.event = self.mongo_db["events"]
 
         self.collector_id = collector_id
 
