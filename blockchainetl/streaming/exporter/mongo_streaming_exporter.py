@@ -25,7 +25,7 @@ class MongodbStreamingExporter(object):
         if collector_id in MongoDBConfig.EVENTS:
             self.event = self.mongo_db[collector_id]
         else:
-            self.event = self.mongo_db["events"]
+            self.event = self.mongo_db[MongoDBConfig.LENDING_EVENTS]
 
         self.collector_id = collector_id
 
