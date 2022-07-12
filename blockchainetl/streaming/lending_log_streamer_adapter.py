@@ -21,6 +21,7 @@ class EthLendingLogStreamerAdapter(EventStreamerAdapter):
             provider,
             batch_size=96,
             max_workers=8,
+            event_abi=None,
             abi=LENDING_POOL_ABI,
             oracle_abi=TRAVA_ORACLE_ABI,
             collector_id=None
@@ -41,6 +42,7 @@ class EthLendingLogStreamerAdapter(EventStreamerAdapter):
         self.w3_archive_node.middleware_onion.inject(geth_poa_middleware, layer=0)
         self.client_querier_archive_node = client_querier_archive_node
         self.client_querier_full_node = client_querier_full_node
+        self.event_abi = event_abi
         """
         log performance realtime for mr.dat
         """
@@ -69,6 +71,7 @@ class EthLendingLogStreamerAdapter(EventStreamerAdapter):
             contract_addresses=self.contract_addresses,
             oracle_address=self.oracle_address,
             abi=self.abi,
+            event_abi=self.event_abi,
             oracle_abi=self.oracle_abi,
             client_querier_archive_node=self.client_querier_archive_node,
             client_querier_full_node=self.client_querier_full_node

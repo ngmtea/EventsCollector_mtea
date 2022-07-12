@@ -29,7 +29,7 @@ from blockchainetl.providers.auto import get_provider_from_uri
 from blockchainetl.utils.thread_local_proxy import ThreadLocalProxy
 from query_state_lib.client.client_querier import ClientQuerier
 from blockchainetl.streaming.streaming_exporter_creator import create_steaming_exporter
-from blockchainetl.streaming.lending_log_event_streamer_adapter import EthAllLendingEventStreamerAdapter
+from blockchainetl.streaming.multi_lending_log_streamer_adapter import EthAllLendingEventStreamerAdapter
 from blockchainetl.streaming.streamer import Streamer
 
 

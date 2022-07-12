@@ -55,11 +55,8 @@ from constants.abi_constants import ABI
               help='The number of blocks to collect at a time.')
 @click.option('-w', '--max-workers', default=5, show_default=True, type=int,
               help='The maximum number of workers.')
-@click.option('-ca', '--contract-address', default=None, show_default=True, type=str,
+@click.option('-pns', '--pool-names', default=[], show_default=True, type=str, multiple=True,
               help='The list of contract addresses to filter by.')
-@click.option('-oa', '--oracle-address', default=[], show_default=True, type=str, multiple=False,
-              help='The list of oracle address to filter by.')
-@click.option('-a', '--abi', default=None, type=str, help='lending abi vesion')
 @click.option('--log-file', default=None, show_default=True, type=str, help='Log file')
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
 @click.option('--event-collector-id', default="lending_events",
@@ -72,9 +69,8 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
                                           provider_uri_archive_node, output,
                                           db_prefix="", start_block=None, end_block=None,
                                           period_seconds=10, collector_batch_size=96, streamer_batch_size=960,
-                                          max_workers=5, contract_address=None,
-                                          oracle_address=None, abi='trava_lending_abi',
-                                          log_file=None, pid_file=None, event_collector_id="lending_events",
+                                          max_workers=5, pool_names=[], log_file=None,
+                                          pid_file=None, event_collector_id="lending_events",
                                           transaction_collector_id=None, graph_db=None,
                                           ):
     """Collect token transfer events."""
@@ -96,8 +92,6 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
         'link_mongo_db': output
     }
     streamer_adapter = MissedEventStreamerAdapter(
-        contract_address=contract_address,
-        oracle_address=oracle_address,
         provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri_full_node, batch=True)),
         provider_uri_archive_node=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri_archive_node,
                                                                                  batch=True)),
@@ -107,9 +101,9 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
                                                collector_id=event_collector_id),
         batch_size=collector_batch_size,
         max_workers=max_workers,
-        abi=get_abi(abi),
         collector_id=transaction_collector_id,
-        param=param
+        param=param,
+        pool_names=pool_names
     )
     streamer = RoundTimeStreamer(
         blockchain_streamer_adapter=streamer_adapter,
@@ -133,14 +127,3 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
 def pick_random_provider_uri(provider_uri):
     provider_uris = [uri.strip() for uri in provider_uri.split(',')]
     return random.choice(provider_uris)
-
-
-def get_abi(abi):
-    if os.path.exists(abi):
-        with open(abi, 'r') as f:
-            result = f.read()
-        return json.loads(result)
-    elif abi in ABI.mapping.keys():
-        return ABI.mapping[abi]
-    else:
-        raise click.BadOptionUsage('abi', 'ABI not found')
