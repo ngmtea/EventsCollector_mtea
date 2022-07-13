@@ -33,7 +33,7 @@ class MissedEventStreamerAdapter(EthAllLendingEventStreamerAdapter):
         )
         self.param = param
 
-    def _export_token_transfers(self, start_block, end_block):
+    def _export_events(self, start_block, end_block):
         for pool_name in self.pool_names:
             if pool_name not in self.pool_constant:
                 logging.error(f'{pool_name} is not in pool constant')

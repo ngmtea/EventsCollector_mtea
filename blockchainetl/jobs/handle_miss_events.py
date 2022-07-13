@@ -83,7 +83,7 @@ class MissedEventHanler(ExportLendingEvent):
         self.update_events()
 
         _LOGGER.info(f'Crawled {len(self.miss_events)} missed events from {self.start_block} to {self.end_block}!')
-
+            
     def update_events(self):
         for event in self.miss_events:
             params = {
