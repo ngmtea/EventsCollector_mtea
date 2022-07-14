@@ -1,6 +1,3 @@
-from domain.lending_log_subcriber import EventSubscriber
-from mappers.receipt_lending_log_mapper import get_topic_filter, get_all_address_name_field, get_list_params_in_order
-
 MULTI_SIG_WALLET_EVENT_ABI = [
     {
         "anonymous": False,
