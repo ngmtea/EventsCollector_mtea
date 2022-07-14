@@ -4,7 +4,8 @@ import pathlib
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from blockchainetl.jobs.multi_sig_wallet_event_exporter import MultiSigWalletEventExporter
-from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
+from artifacts.abi.cross_chain_abi.multi_sig_wallet_event_abi import *
+from constants.multisig_wallet_constants import MultiSigFactories
 
 
 class MultiSigWalletEventStreamerAdapter:
@@ -15,11 +16,9 @@ class MultiSigWalletEventStreamerAdapter:
             provider,
             batch_size=96,
             max_workers=8,
-            abi=LENDING_POOL_ABI,
             collector_id=None,
             client_querier_full_node=None
     ):
-        self.abi = abi
         self.provider = provider
         self.w3 = Web3(provider)
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -54,17 +53,38 @@ class MultiSigWalletEventStreamerAdapter:
         self._export_token_transfers(start_block, end_block)
 
     def _export_token_transfers(self, start_block, end_block):
+        factories, multi_sig_wallets = [], []
+        for address in self.contract_addresses:
+            if address.lower() in MultiSigFactories.addresses:
+                factories.append(address)
+            else:
+                multi_sig_wallets.append(address)
+        if factories:
+            job = MultiSigWalletEventExporter(
+                start_block=start_block,
+                end_block=end_block,
+                batch_size=self.batch_size,
+                web3=self.w3,
+                item_exporter=self.item_exporter,
+                max_workers=self.max_workers,
+                contract_addresses=factories,
+                abi=MULTI_SIG_WALLET_FACTORY_EVENT_ABI,
+                client_querier_full_node=self.client_querier_full_node
+            )
+            job.run()
+
         job = MultiSigWalletEventExporter(
-            start_block=start_block,
-            end_block=end_block,
-            batch_size=self.batch_size,
-            web3=self.w3,
-            item_exporter=self.item_exporter,
-            max_workers=self.max_workers,
-            contract_addresses=self.contract_addresses,
-            abi=self.abi,
-            client_querier_full_node=self.client_querier_full_node
-        )
+                start_block=start_block,
+                end_block=end_block,
+                batch_size=self.batch_size,
+                web3=self.w3,
+                item_exporter=self.item_exporter,
+                max_workers=self.max_workers,
+                contract_addresses=multi_sig_wallets,
+                abi=MULTI_SIG_WALLET_EVENT_ABI,
+                client_querier_full_node=self.client_querier_full_node,
+                check_event=True
+            )
         job.run()
 
     def close(self):

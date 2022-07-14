@@ -1,7 +1,7 @@
 import logging
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.erc20_abi import ERC20_ABI
-from constants.lending_pool_constant import PoolConstant
+from constants.lending_pool_constants import PoolConstant
 from query_state_lib.base.mappers.eth_call_mapper import EthCall
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
 from blockchainetl.jobs.event_exporter import ExportEvent

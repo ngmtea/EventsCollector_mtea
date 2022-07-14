@@ -1,8 +1,8 @@
 from blockchainetl.jobs.event_exporter import ExportEvent
 import logging
-from query_state_lib.base.mappers.eth_call_mapper import EthCall
+from blockchainetl.mappers.receipt__cross_chain_log_mapper import EthReceiptCrossChainLogMapper
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
-from constants.event_constant import Event
+from constants.event_constants import Event
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,7 +25,9 @@ class MultiSigWalletEventExporter(ExportEvent):
                  web3,
                  contract_addresses,
                  abi,
-                 client_querier_full_node):
+                 client_querier_full_node,
+                 check_event=False
+                 ):
         super().__init__(
             start_block,
             end_block,
@@ -36,12 +38,15 @@ class MultiSigWalletEventExporter(ExportEvent):
             contract_addresses,
             abi
         )
+        self.check_event = check_event
+        self.receipt_log = EthReceiptCrossChainLogMapper()
         self.client_querier_full_node = client_querier_full_node
         self.eth_call_full_node = []
 
     def _end(self):
         self.batch_work_executor.shutdown()
-        self.event_data = self._check_events()
+        if self.check_event:
+            self.event_data = self._check_events()
         for eth_event_dict in self.event_data:
             self._make_eth_call(eth_event_dict)
         self.event_data = self.enrich_event()
@@ -55,13 +60,14 @@ class MultiSigWalletEventExporter(ExportEvent):
             if event[Event.contract_address] not in contract_addresses:
                 contract_addresses.append(event[Event.contract_address])
 
-        identities = self.item_exporter.get_items("CrossChainIdentities", "identities", {"_id":{"$in":contract_addresses}})
+        identities = self.item_exporter.get_items("CrossChainIdentities", "identities",
+                                                  {"_id": {"$in": contract_addresses}})
         identity_addresses = []
         for i in identities:
             identity_addresses.append(i["_id"])
 
         for event in self.event_data:
-            if event[Event.contract_address] not in identity_addresses:continue
+            if event[Event.contract_address] not in identity_addresses: continue
             result.append(event)
 
         return result

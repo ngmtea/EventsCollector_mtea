@@ -1,4 +1,4 @@
-from constants.lending_pool_constant import PoolConstant
+from constants.lending_pool_constants import PoolConstant
 from update_missed_event import run
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 import logging

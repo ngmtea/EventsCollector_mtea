@@ -5,7 +5,7 @@ import pathlib
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from blockchainetl.jobs.export_lending_log_job import ExportLendingEvent
-from constants.lending_pool_constant import PoolConstant
+from constants.lending_pool_constants import PoolConstant
 
 
 class EthAllLendingEventStreamerAdapter:

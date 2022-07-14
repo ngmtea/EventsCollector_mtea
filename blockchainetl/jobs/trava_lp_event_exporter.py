@@ -7,7 +7,7 @@ from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
 from constants.trava_lp_contant import TravaLPConstant
 from data_storage.memory_storage import MemoryStorage
 from artifacts.abi.chainlink_abi import CHAINLINK_ABI
-from constants.event_constant import *
+from constants.event_constants import *
 
 _LOGGER = logging.getLogger(__name__)
 

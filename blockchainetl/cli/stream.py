@@ -27,7 +27,7 @@ import json
 import click
 from configs.config import MongoDBConfig
 
-from constants.event_constant import StreamerTypes
+from constants.event_constants import StreamerTypes
 from constants.trava_vaults import *
 from utils.logging_utils import logging_basic_config
 from blockchainetl.providers.auto import get_provider_from_uri

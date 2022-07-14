@@ -57,7 +57,6 @@ from constants.abi_constants import ABI
               help='The maximum number of workers.')
 @click.option('-ca', '--contract-addresses', default=[], show_default=True, type=str, multiple=True,
               help='The list of contract addresses to filter by.')
-@click.option('-a', '--abi', default='trava_lending_abi', type=str, help='lending abi vesion')
 @click.option('--log-file', default=None, show_default=True, type=str, help='Log file')
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
 @click.option('--event-collector-id', default="events",
@@ -66,8 +65,8 @@ from constants.abi_constants import ABI
               show_default=True, type=str, help='transaction collector id')
 def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, output,
                                      db_prefix="", database="", start_block=None, end_block=None,
-                                     period_seconds=10, collector_batch_size=96, streamer_batch_size=960, max_workers=5,
-                                     contract_addresses=None, abi='trava_lending_abi',
+                                     period_seconds=10, collector_batch_size=96, streamer_batch_size=960,
+                                     max_workers=5, contract_addresses=None,
                                      log_file=None, pid_file=None, event_collector_id="events",
                                      transaction_collector_id=None):
     """Collect events."""
@@ -84,7 +83,6 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
 
     client_querier_full_node = ClientQuerier(provider_url=provider)
     streamer_adapter = MultiSigWalletEventStreamerAdapter(
-        abi=get_abi(abi),
         contract_addresses=list(contract_addresses),
         provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider, batch=True)),
         item_exporter=item,
@@ -111,17 +109,6 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
     streamer.stream()
     end_time = int(time.time())
     logging.info('Total time ' + str(end_time - start_time))
-
-
-def get_abi(abi):
-    if os.path.exists(abi):
-        with open(abi, 'r') as f:
-            result = f.read()
-        return json.loads(result)
-    elif abi in ABI.mapping.keys():
-        return ABI.mapping[abi]
-    else:
-        raise click.BadOptionUsage('abi', 'ABI not found')
 
 
 def pick_random_provider_uri(provider_uri):

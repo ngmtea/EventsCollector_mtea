@@ -5,7 +5,7 @@ from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from blockchainetl.jobs.export_lending_log_job import ExportLendingEvent
 from blockchainetl.streaming.event_streamer_adapter import EventStreamerAdapter
-from constants.event_constant import *
+from constants.event_constants import *
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 from blockchainetl.jobs.event_exporter import ExportEvent

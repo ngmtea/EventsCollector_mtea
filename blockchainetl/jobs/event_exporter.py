@@ -3,7 +3,7 @@ import logging
 from blockchainetl.executors.batch_work_executor import BatchWorkExecutor
 from blockchainetl.jobs.base_job import BaseJob
 from blockchainetl.mappers.receipt_lending_log_mapper import EthReceiptLendingLogMapper
-from constants.event_constant import Event
+from constants.event_constants import Event
 
 _LOGGER = logging.getLogger(__name__)
 
