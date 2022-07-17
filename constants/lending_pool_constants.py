@@ -37,7 +37,7 @@ class PoolConstant:
             'db_prefix': 'ftm',
             'chain_id': "0xfa",
             'oracle_address': '0xC466e3FeE82C6bdc2E17f2eaF2c6F1E91AD10FD3',
-            "enricher_id": 'enricher-geist-event-id',
+            "enricher_id": 'enricher-event-id',
             'abi_type': 'v2',
             'last_syned_block': "geist_ftm.txt",
         },
@@ -67,7 +67,7 @@ class PoolConstant:
             'db_prefix': 'ethereum',
             'chain_id': "0x1",
             'oracle_address': '0x2bd81260fe864173b6ec1ec9ee41a76366922565',
-            "enricher_id": 'enricher-default-id',
+            "enricher_id": 'enricher-event-id',
             'abi_type': 'v1',
             'last_syned_block': "trava_eth.txt",
         },
@@ -82,7 +82,7 @@ class PoolConstant:
             'db_prefix': 'ethereum',
             'chain_id': "0x1",
             'oracle_address': '0xA50ba011c48153De246E5192C8f9258A2ba79Ca9',
-            "enricher_id": "enricher-aave-v2",
+            "enricher_id": "enricher-event-id",
             'abi_type': 'v2',
             'last_syned_block': "aave_v2.txt",
         },
@@ -97,9 +97,9 @@ class PoolConstant:
             'db_prefix': 'ethereum',
             'chain_id': "0x1",
             'oracle_address': '0x3436c4B4A27B793539844090e271591cbCb0303c',
-            "enricher_id": "enricher-aave-v2",
+            "enricher_id": "enricher-default-id",
             'abi_type': 'v2',
-            'last_syned_block': "aave_v2.txt",
+            'last_syned_block': "valas_bsc.txt",
         }
     }
     all_pool=[trava_eth, trava_bsc, trava_ftm, aave_v2, geist]
