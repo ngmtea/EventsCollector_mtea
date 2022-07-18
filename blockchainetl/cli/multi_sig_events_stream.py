@@ -103,7 +103,7 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
         stream_id=event_collector_id,
         output=output,
         db_prefix=db_prefix,
-        database=database
+        database="CrossChainIdentities"
     )
     start_time = int(time.time())
     streamer.stream()
