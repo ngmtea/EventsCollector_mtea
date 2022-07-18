@@ -60,6 +60,8 @@ class Streamer:
         self.retry_errors = retry_errors
         self.pid_file = pid_file
         self.stream_id = stream_id
+        if not database:
+            database = MongoDBConfig.DATABASE
         self.exporter = create_steaming_exporter(output, stream_id, db_prefix, database)
 
         if self.start_block is not None or not os.path.isfile(self.last_synced_block_file):

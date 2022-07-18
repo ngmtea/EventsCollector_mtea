@@ -1,5 +1,5 @@
 from constants.lending_pool_constants import PoolConstant
-from update_missed_event import run
+from services.update_missed_event import run
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 import logging
 from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
