@@ -55,7 +55,6 @@ from blockchainetl.streaming.streamer import Streamer
               help='The list of contract addresses to filter by.')
 @click.option('--log-file', default=None, show_default=True, type=str, help='Log file')
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
-@click.option('--chain-id', default=None, show_default=True, type=str, help='chain id')
 @click.option('--event-collector-id', default="events",
               show_default=True, type=str, help='event collector id')
 @click.option('--transaction-collector-id', default=None,
@@ -87,7 +86,6 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
         max_workers=max_workers,
         collector_id=transaction_collector_id,
         client_querier_full_node=client_querier_full_node,
-        chain_id=chain_id
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,

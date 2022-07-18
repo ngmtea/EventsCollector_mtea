@@ -28,7 +28,6 @@ class MultiSigWalletEventExporter(ExportEvent):
                  abi,
                  client_querier_full_node,
                  check_event=False,
-                 chain_id = None
                  ):
         super().__init__(
             start_block,
@@ -40,7 +39,6 @@ class MultiSigWalletEventExporter(ExportEvent):
             contract_addresses,
             abi
         )
-        self.chain_id = chain_id
         self.check_event = check_event
         self.receipt_log = EthReceiptCrossChainLogMapper()
         self.client_querier_full_node = client_querier_full_node
@@ -82,7 +80,6 @@ class MultiSigWalletEventExporter(ExportEvent):
         for event in self.event_data:
             event['block_timestamp'] = int(block_transaction[event['_id'] + '_block'].result['timestamp'], 16)
             event['wallet'] = str(block_transaction[event['_id'] + '_transaction'].result['from']).lower()
-            event['chain_id'] = self.chain_id
             result.append(event)
 
         return result
