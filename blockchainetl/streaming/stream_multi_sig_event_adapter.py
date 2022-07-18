@@ -17,8 +17,10 @@ class MultiSigWalletEventStreamerAdapter:
             batch_size=96,
             max_workers=8,
             collector_id=None,
-            client_querier_full_node=None
+            client_querier_full_node=None,
+            chain_id = None
     ):
+        self.chain_id = chain_id
         self.provider = provider
         self.w3 = Web3(provider)
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -69,7 +71,8 @@ class MultiSigWalletEventStreamerAdapter:
                 max_workers=self.max_workers,
                 contract_addresses=factories,
                 abi=MULTI_SIG_WALLET_FACTORY_EVENT_ABI,
-                client_querier_full_node=self.client_querier_full_node
+                client_querier_full_node=self.client_querier_full_node,
+                chain_id=self.chain_id
             )
             job.run()
 
@@ -83,7 +86,8 @@ class MultiSigWalletEventStreamerAdapter:
                 contract_addresses=multi_sig_wallets,
                 abi=MULTI_SIG_WALLET_EVENT_ABI,
                 client_querier_full_node=self.client_querier_full_node,
-                check_event=True
+                check_event=True,
+                chain_id=self.chain_id
             )
         job.run()
 

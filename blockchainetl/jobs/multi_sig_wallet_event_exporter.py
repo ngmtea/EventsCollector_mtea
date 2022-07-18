@@ -3,6 +3,7 @@ import logging
 from blockchainetl.mappers.receipt__cross_chain_log_mapper import EthReceiptCrossChainLogMapper
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
 from constants.event_constants import Event
+from constants.multisig_wallet_constants import MultiSigFactories
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +27,8 @@ class MultiSigWalletEventExporter(ExportEvent):
                  contract_addresses,
                  abi,
                  client_querier_full_node,
-                 check_event=False
+                 check_event=False,
+                 chain_id = None
                  ):
         super().__init__(
             start_block,
@@ -38,6 +40,7 @@ class MultiSigWalletEventExporter(ExportEvent):
             contract_addresses,
             abi
         )
+        self.chain_id = chain_id
         self.check_event = check_event
         self.receipt_log = EthReceiptCrossChainLogMapper()
         self.client_querier_full_node = client_querier_full_node
@@ -79,8 +82,9 @@ class MultiSigWalletEventExporter(ExportEvent):
         for event in self.event_data:
             event['block_timestamp'] = int(block_transaction[event['_id'] + '_block'].result['timestamp'], 16)
             event['wallet'] = str(block_transaction[event['_id'] + '_transaction'].result['from']).lower()
-
+            event['chain_id'] = self.chain_id
             result.append(event)
+
         return result
 
     def _make_eth_call(self, eth_event_dict):

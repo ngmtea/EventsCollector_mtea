@@ -93,7 +93,7 @@ def stream_multi_lending_event_collector(last_synced_block_file, lag, provider_u
         batch_size=collector_batch_size,
         max_workers=max_workers,
         collector_id=transaction_collector_id,
-        pool_names=list(pool_names)
+        pool_names=list(pool_names),
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,

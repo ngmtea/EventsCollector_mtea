@@ -22,8 +22,6 @@
 import logging
 import random
 import time
-import os
-import json
 import click
 from query_state_lib.client.client_querier import ClientQuerier
 
@@ -33,8 +31,6 @@ from blockchainetl.utils.thread_local_proxy import ThreadLocalProxy
 from blockchainetl.streaming.streaming_exporter_creator import create_steaming_exporter
 from blockchainetl.streaming.stream_multi_sig_event_adapter import MultiSigWalletEventStreamerAdapter
 from blockchainetl.streaming.streamer import Streamer
-from constants.abi_constants import ABI
-
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--last-synced-block-file', default='last_synced_block.txt', show_default=True, type=str, help='')
@@ -59,6 +55,7 @@ from constants.abi_constants import ABI
               help='The list of contract addresses to filter by.')
 @click.option('--log-file', default=None, show_default=True, type=str, help='Log file')
 @click.option('--pid-file', default=None, show_default=True, type=str, help='pid file')
+@click.option('--chain-id', default=None, show_default=True, type=str, help='chain id')
 @click.option('--event-collector-id', default="events",
               show_default=True, type=str, help='event collector id')
 @click.option('--transaction-collector-id', default=None,
@@ -67,8 +64,8 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
                                      db_prefix="", database="", start_block=None, end_block=None,
                                      period_seconds=10, collector_batch_size=96, streamer_batch_size=960,
                                      max_workers=5, contract_addresses=None,
-                                     log_file=None, pid_file=None, event_collector_id="events",
-                                     transaction_collector_id=None):
+                                     log_file=None, pid_file=None, chain_id=None,
+                                     event_collector_id="events", transaction_collector_id=None):
     """Collect events."""
     logging_basic_config(filename=log_file)
     logger = logging.getLogger('Stream_multi_sig_wallet_event_collector')
@@ -89,7 +86,8 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
         batch_size=collector_batch_size,
         max_workers=max_workers,
         collector_id=transaction_collector_id,
-        client_querier_full_node=client_querier_full_node
+        client_querier_full_node=client_querier_full_node,
+        chain_id=chain_id
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,
@@ -102,7 +100,7 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
         pid_file=pid_file,
         stream_id=event_collector_id,
         output=output,
-        database="CrossChainIdentities"
+        database=database
     )
     start_time = int(time.time())
     streamer.stream()
