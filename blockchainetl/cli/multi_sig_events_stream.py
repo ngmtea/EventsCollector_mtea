@@ -63,7 +63,7 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
                                      db_prefix="", database="", start_block=None, end_block=None,
                                      period_seconds=10, collector_batch_size=96, streamer_batch_size=960,
                                      max_workers=5, contract_addresses=None,
-                                     log_file=None, pid_file=None, chain_id=None,
+                                     log_file=None, pid_file=None,
                                      event_collector_id="events", transaction_collector_id=None):
     """Collect events."""
     logging_basic_config(filename=log_file)
