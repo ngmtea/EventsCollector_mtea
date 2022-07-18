@@ -27,7 +27,10 @@ class MongoDBConfig:
     VAULT_EVENTS = 'vault_events'
     NFT_VAULT_EVENTS = 'nft_vault_events'
     EVENTS = ['lending_events', 'lp_events', 'vault_events', 'nft_vault_events', "events"]
-    MULTI_SIG_EVENTS = ["bsc_testnet_events", 'rinkeby_events']
+    MULTI_SIG_EVENTS = {
+        "bsc_testnet":"0x61_events",
+        'rinkeby_events':"0x4_events"
+    }
     CONNECTION_URL = f'mongodb://{NAME}:{PASSWORD}@{HOST}:{PORT}'
 
 
