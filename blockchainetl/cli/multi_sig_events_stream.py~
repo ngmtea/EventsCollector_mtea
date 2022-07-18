@@ -72,10 +72,10 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
     logger.info(f"Start streaming from block {start_block} to block {end_block}")
     logger.info('Using full node: ' + provider)
     item = create_steaming_exporter(output=output, db_prefix=db_prefix,
-                                    collector_id=event_collector_id)
+                                    collector_id="events")
     if database:
         item = create_steaming_exporter(output=output, db_prefix=db_prefix,
-                                        collector_id=event_collector_id, database=database)
+                                        collector_id="events", database=database)
 
     client_querier_full_node = ClientQuerier(provider_url=provider)
     streamer_adapter = MultiSigWalletEventStreamerAdapter(
