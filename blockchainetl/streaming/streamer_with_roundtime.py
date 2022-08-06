@@ -1,8 +1,6 @@
-from blockchainetl.streaming.streamer import Streamer, write_to_file, delete_file
+from blockchainetl.streaming.streamer import *
 from blockchainetl.streaming.streamer_adapter_stub import StreamerAdapterStub
 from configs.blockchain_etl_config import BlockchainEtlConfig
-import logging
-import time
 
 class RoundTimeStreamer(Streamer):
     def __init__(
@@ -26,7 +24,7 @@ class RoundTimeStreamer(Streamer):
             lag=lag,
             start_block=start_block,
             end_block=end_block,
-            period_seconds=period_seconds,
+            period_seconds=10,
             block_batch_size=block_batch_size,
             retry_errors=retry_errors,
             pid_file=pid_file,
@@ -34,22 +32,3 @@ class RoundTimeStreamer(Streamer):
             output=output,
             db_prefix=db_prefix
         )
-
-    def _do_stream(self):
-        while True and (self.end_block is None or self.last_synced_block < self.end_block):
-            synced_blocks = 0
-
-            try:
-                synced_blocks = self._sync_cycle()
-                if synced_blocks <= 0:
-                    logging.info('Sleeping for {} seconds...'.format(self.period_seconds))
-                    time.sleep(self.period_seconds)
-            except Exception as e:
-                # https://stackoverflow.com/a/4992124/1580227
-                logging.exception('An exception occurred while syncing block data.')
-                if not self.retry_errors:
-                    raise e
-
-            if synced_blocks <= 0:
-                logging.info('Nothing to sync. Sleeping for {} seconds...'.format(self.period_seconds))
-                time.sleep(1)
