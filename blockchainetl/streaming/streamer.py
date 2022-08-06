@@ -97,6 +97,9 @@ class Streamer:
 
             try:
                 synced_blocks = self._sync_cycle()
+                if synced_blocks <= 0:
+                logging.info('Nothing to sync. Sleeping for {} seconds...'.format(self.period_seconds))
+                time.sleep(self.period_seconds)
             except Exception as e:
                 # https://stackoverflow.com/a/4992124/1580227
                 logging.exception('An exception occurred while syncing block data.')
