@@ -111,7 +111,7 @@ def stream_missed_lending_event_collector(last_synced_block_file, lag, provider_
         lag=lag,
         start_block=start_block,
         end_block=end_block,
-        period_seconds=period_seconds,
+        period_seconds=10,
         block_batch_size=streamer_batch_size,
         pid_file=pid_file,
         stream_id=event_collector_id,
