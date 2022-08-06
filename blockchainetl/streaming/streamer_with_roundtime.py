@@ -43,7 +43,7 @@ class RoundTimeStreamer(Streamer):
                 synced_blocks = self._sync_cycle()
                 if synced_blocks <= 0:
                     logging.info('Sleeping for {} seconds...'.format(self.period_seconds))
-                    time.sleep(1)
+                    time.sleep(self.period_seconds)
             except Exception as e:
                 # https://stackoverflow.com/a/4992124/1580227
                 logging.exception('An exception occurred while syncing block data.')
