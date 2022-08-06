@@ -32,3 +32,20 @@ class RoundTimeStreamer(Streamer):
             output=output,
             db_prefix=db_prefix
         )
+
+    def _do_stream(self):
+        while True and (self.end_block is None or self.last_synced_block < self.end_block):
+            synced_blocks = 0
+            try:
+                synced_blocks = self._sync_cycle()
+                if synced_blocks <= 0:
+                    logging.info('Nothing to sync. Sleeping for {} seconds...'.format(self.period_seconds))
+                    time.sleep(self.period_seconds)
+            except Exception as e:
+                # https://stackoverflow.com/a/4992124/1580227
+                logging.exception('An exception occurred while syncing block data.')
+                if not self.retry_errors:
+                    raise e
+
+            if synced_blocks <= 0:
+                time.sleep(10)
