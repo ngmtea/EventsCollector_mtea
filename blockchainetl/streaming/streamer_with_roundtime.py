@@ -24,7 +24,7 @@ class RoundTimeStreamer(Streamer):
             lag=lag,
             start_block=start_block,
             end_block=end_block,
-            period_seconds=10,
+            period_seconds=period_seconds,
             block_batch_size=block_batch_size,
             retry_errors=retry_errors,
             pid_file=pid_file,
