@@ -80,7 +80,7 @@ class MissedEventHanler(ExportLendingEvent):
         self.miss_events = self.enrich_event()
         self.item_exporter.export_items(self.miss_events)
         self.item_exporter.close()
-        self.update_events()
+        # self.update_events()
 
         _LOGGER.info(f'Crawled {len(self.miss_events)} missed events from {self.start_block} to {self.end_block}!')
             
