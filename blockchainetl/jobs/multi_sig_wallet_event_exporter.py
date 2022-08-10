@@ -27,6 +27,7 @@ class MultiSigWalletEventExporter(ExportEvent):
                  contract_addresses,
                  abi,
                  client_querier_full_node,
+                 chain_id,
                  check_event=False,
                  ):
         super().__init__(
@@ -43,6 +44,7 @@ class MultiSigWalletEventExporter(ExportEvent):
         self.receipt_log = EthReceiptCrossChainLogMapper()
         self.client_querier_full_node = client_querier_full_node
         self.eth_call_full_node = []
+        self.chain_id = chain_id
 
     def _end(self):
         self.batch_work_executor.shutdown()
@@ -62,10 +64,10 @@ class MultiSigWalletEventExporter(ExportEvent):
                 contract_addresses.append(event[Event.contract_address])
 
         identities = self.item_exporter.get_items("CrossChainIdentities", "identities",
-                                                  {"_id": {"$in": contract_addresses}})
+                                                  {"_id": {"$in": [self.chain_id+'_'+i for i in contract_addresses]}})
         identity_addresses = []
-        for i in identities:
-            identity_addresses.append(i["_id"])
+        for i in identities: 
+            identity_addresses.append(i["_id"].split('_')[1])
 
         for event in self.event_data:
             if event[Event.contract_address] not in identity_addresses: continue

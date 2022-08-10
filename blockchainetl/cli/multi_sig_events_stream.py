@@ -31,6 +31,7 @@ from blockchainetl.utils.thread_local_proxy import ThreadLocalProxy
 from blockchainetl.streaming.streaming_exporter_creator import create_steaming_exporter
 from blockchainetl.streaming.stream_multi_sig_event_adapter import MultiSigWalletEventStreamerAdapter
 from blockchainetl.streaming.streamer import Streamer
+from constants.multisig_wallet_constants import MultiSigFactories
 
 @click.command(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--last-synced-block-file', default='last_synced_block.txt', show_default=True, type=str, help='')
@@ -78,6 +79,7 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
                                         collector_id=event_collector_id, database=database)
 
     client_querier_full_node = ClientQuerier(provider_url=provider)
+    chain_id = MultiSigFactories.chain_id_mapping[event_collector_id]
     streamer_adapter = MultiSigWalletEventStreamerAdapter(
         contract_addresses=list(contract_addresses),
         provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider, batch=True)),
@@ -86,6 +88,7 @@ def stream_multi_sig_event_collector(last_synced_block_file, lag, provider, outp
         max_workers=max_workers,
         collector_id=transaction_collector_id,
         client_querier_full_node=client_querier_full_node,
+        chain_id=chain_id
     )
     streamer = Streamer(
         blockchain_streamer_adapter=streamer_adapter,

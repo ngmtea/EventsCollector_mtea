@@ -14,12 +14,14 @@ class MultiSigWalletEventStreamerAdapter:
             contract_addresses,
             item_exporter,
             provider,
+            chain_id,
             batch_size=96,
             max_workers=8,
             collector_id=None,
-            client_querier_full_node=None
+            client_querier_full_node=None,
     ):
         self.provider = provider
+        self.chain_id = chain_id
         self.w3 = Web3(provider)
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
         self.item_exporter = item_exporter
@@ -65,6 +67,7 @@ class MultiSigWalletEventStreamerAdapter:
                 end_block=end_block,
                 batch_size=self.batch_size,
                 web3=self.w3,
+                chain_id=self.chain_id,
                 item_exporter=self.item_exporter,
                 max_workers=self.max_workers,
                 contract_addresses=factories,
@@ -78,6 +81,7 @@ class MultiSigWalletEventStreamerAdapter:
                 end_block=end_block,
                 batch_size=self.batch_size,
                 web3=self.w3,
+                chain_id=self.chain_id,
                 item_exporter=self.item_exporter,
                 max_workers=self.max_workers,
                 contract_addresses=multi_sig_wallets,

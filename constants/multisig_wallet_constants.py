@@ -9,8 +9,11 @@ class MultiSigFactories:
         "0x1047b4694cc749c3abaab6fac300997777373a39":{
             chain_id:"0x4",
         },
-        0x1047b4694cc749c3abaab6fac300997777373a39:{
+        "0x1047b4694cc749c3abaab6fac300997777373a39":{
             chain_id:"0x61"
         }
-
+    }
+    chain_id_mapping = {
+        "rinkeby":"0x4",
+        "bsc_testnet":'0x61'
     }
