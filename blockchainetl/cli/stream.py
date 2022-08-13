@@ -99,7 +99,6 @@ def stream(last_synced_block_file, lag, provider_uri_full_node=None, provider_ur
 
     if "nft_vaults" in contract_addresses:
         contract_addresses = NFT_TRAVA_VAULTS_ADDRESSES
-
     streamer_adapter = EthAllStreamerAdapter(
         contract_addresses=list(contract_addresses),
         oracle_address=oracle_address,

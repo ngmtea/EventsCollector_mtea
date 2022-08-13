@@ -83,3 +83,17 @@ class MongodbStreamingExporter(object):
 
     def close(self):
         pass
+
+    def export_collection_items(self, db, collection, operations_data):
+        if not operations_data:
+            logger.debug(f"Error: Don't have any data to write")
+            return
+        start = time.time()
+        bulk_operations = [UpdateOne({'_id': data['_id']}, {"$set": data}, upsert=True) for data in operations_data]
+        logger.info(f"Updating into collection {collection} ........")
+        try:
+            self.mongo[db][collection].bulk_write(bulk_operations)
+        except Exception as bwe:
+            logger.error(f"Error: {bwe}")
+        end = time.time()
+        logger.info(f"Success write data to database take {end - start}s")

@@ -9,6 +9,7 @@ from artifacts.abi.lending.lp_token_events_abi import LP_TOKEN_EVENT_ABI
 from artifacts.abi.vault.nft_vault_events import NFT_VAULT_EVENT_ABI
 from artifacts.abi.vault.vault_events import VAULT_EVENT_ABI
 from artifacts.abi.cross_chain_abi.multi_sig_wallet_event_abi import MULTI_SIG_WALLET_EVENT_ABI
+from artifacts.abi.events.transfer_event_abi import TRANSFER_EVENT_ABI
 
 
 
@@ -24,5 +25,6 @@ class ABI:
         "lp_token_event_abi": LP_TOKEN_EVENT_ABI,
         "vault_event_abi": VAULT_EVENT_ABI,
         "nft_vault_event_abi": NFT_VAULT_EVENT_ABI,
-        "multi_sig_event_abi": MULTI_SIG_WALLET_EVENT_ABI
+        "multi_sig_event_abi": MULTI_SIG_WALLET_EVENT_ABI,
+        "transfer_event_abi": TRANSFER_EVENT_ABI
     }

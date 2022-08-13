@@ -22,6 +22,7 @@ class StreamerTypes:
     events = "events"
     lending_events = "lending_events"
     trava_lp_events = "trava_lp_events"
+    lottery_transfer_events = 'lottery_transfer_events'
     all = [events, lending_events, trava_lp_events]
 
 
