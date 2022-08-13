@@ -10,7 +10,7 @@ from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 from blockchainetl.jobs.event_exporter import ExportEvent
 from blockchainetl.jobs.trava_lp_event_exporter import ExportEventTravaLP
-from jobs.lotery_event_exporter import ExportEventLottery
+from blockchainetl.jobs.lotery_event_exporter import ExportEventLottery
 
 
 class EthAllStreamerAdapter(EventStreamerAdapter):
