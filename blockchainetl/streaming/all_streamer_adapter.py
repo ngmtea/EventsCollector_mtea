@@ -11,7 +11,7 @@ from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 from blockchainetl.jobs.event_exporter import ExportEvent
 from blockchainetl.jobs.trava_lp_event_exporter import ExportEventTravaLP
 from blockchainetl.jobs.lottery_event_exporter import ExportEventLottery
-from jobs.lottery_end_event_exporter import ExportEndEventLottery
+from blockchainetl.jobs.lottery_end_event_exporter import ExportEndEventLottery
 
 
 class EthAllStreamerAdapter(EventStreamerAdapter):
