@@ -5,7 +5,7 @@ from query_state_lib.base.mappers.eth_call_mapper import EthCall
 from query_state_lib.base.utils.encoder import encode_eth_call_data
 from artifacts.abi.lending.loterry import LOTTERY
 from data_storage.memory_storage import MemoryStorage
-from jobs.base_job import BaseJob
+from blockchainetl.jobs.base_job import BaseJob
 from constants.lottery_constant import LotteryConstant
 
 _LOGGER = logging.getLogger(__name__)
