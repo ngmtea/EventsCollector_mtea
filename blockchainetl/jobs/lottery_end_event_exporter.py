@@ -88,6 +88,7 @@ class ExportEndEventLottery(BaseJob):
                              "chain_id": self.chain_id[address.lower()]}
                 data = _end_event_data_response[address + str(_id)].decode_result()
                 lottery_data[address] = data[1]
+                end_event["ticket"] = address
                 end_event["start_time"] = data[0]
                 end_event["end_time"] = data[1]
                 end_event["total_deposit"] = data[2]/10**18
