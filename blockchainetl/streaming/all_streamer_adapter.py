@@ -10,7 +10,8 @@ from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 from blockchainetl.jobs.event_exporter import ExportEvent
 from blockchainetl.jobs.trava_lp_event_exporter import ExportEventTravaLP
-from blockchainetl.jobs.lotery_event_exporter import ExportEventLottery
+from blockchainetl.jobs.lottery_event_exporter import ExportEventLottery
+from jobs.lottery_end_event_exporter import ExportEndEventLottery
 
 
 class EthAllStreamerAdapter(EventStreamerAdapter):
@@ -120,6 +121,15 @@ class EthAllStreamerAdapter(EventStreamerAdapter):
                 client_querier_full_node=self.client_querier_full_node,
                 contract_addresses=self.contract_addresses,
                 abi=self.abi
+            )
+            job.run()
+
+        if StreamerTypes.lottery_end_events in self.streamer_types:
+            job = ExportEndEventLottery(
+                item_exporter=self.item_exporter,
+                web3=self.w3,
+                client_querier_full_node=self.client_querier_full_node,
+                contract_addresses=self.contract_addresses
             )
             job.run()
 

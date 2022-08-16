@@ -1,15 +1,15 @@
 from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
 from artifacts.abi.lending.aave.lending_pool_aave_v2_abi import LENDING_POOL_AAVE_V2_ABI
-from artifacts.abi.lending.lending_event_abi import *
+from artifacts.abi.events.lending_event_abi import *
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 
 
 class PoolConstant:
     trava_bsc = 'trava_bsc'
     geist = 'geist'
-    trava_ftm='trava_ftm'
-    trava_eth='trava-eth'
-    aave_v2='aave-v2'
+    trava_ftm = 'trava_ftm'
+    trava_eth = 'trava-eth'
+    aave_v2 = 'aave-v2'
     mapping = {
         'trava-bsc': {
             'name': 'trava-bsc',
@@ -17,8 +17,8 @@ class PoolConstant:
             'decimals': 8,
             'address': '0x75de5f7c91a89c16714017c7443eca20c7a8c295',
             'abi': LENDING_POOL_ABI,
-            'event_abi':TRAVA_LENDING_EVENT_ABI,
-            'oracle_abi':TRAVA_ORACLE_ABI,
+            'event_abi': TRAVA_LENDING_EVENT_ABI,
+            'oracle_abi': TRAVA_ORACLE_ABI,
             'db_prefix': '',
             'chain_id': "0x38",
             'oracle_address': '0x7cd53b71bf56cc6c9c9b43719fe98e7c360c35df',
@@ -86,7 +86,7 @@ class PoolConstant:
             'abi_type': 'v2',
             'last_syned_block': "aave_v2.txt",
         },
-        'valas-bsc':{
+        'valas-bsc': {
             'name': 'valas-bsc',
             'chain_name': 'bsc',
             'decimals': 18,
@@ -102,9 +102,9 @@ class PoolConstant:
             'last_syned_block': "valas_bsc.txt",
         }
     }
-    all_pool=[trava_eth, trava_bsc, trava_ftm, aave_v2, geist]
-    ftm_pool=[trava_ftm, geist]
-    bsc_pool=[trava_bsc]
-    eth_pool=[trava_eth]
+    all_pool = [trava_eth, trava_bsc, trava_ftm, aave_v2, geist]
+    ftm_pool = [trava_ftm, geist]
+    bsc_pool = [trava_bsc]
+    eth_pool = [trava_eth]
     token_type = ['reserve', 'debtAsset', 'collateralAsset']
     event_type = ['DEPOSIT', 'WITHDRAW']
