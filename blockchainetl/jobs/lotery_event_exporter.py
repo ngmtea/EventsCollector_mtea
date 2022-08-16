@@ -74,13 +74,13 @@ class ExportEventLottery(ExportEvent):
                 if event['_from'] not in data[event['contract_address']]:
                     data[event['contract_address']][event['_from']] = {"add": 0, "sub": 0}
 
-                data[event['contract_address']][event['_from']]["sub"] += float(event["_value"])
+                data[event['contract_address']][event['_from']]["sub"] += float(event["_value"]) / 10 ** 18
 
             if event['_to'] != "0x0000000000000000000000000000000000000000":
                 if event['_to'] not in data[event['contract_address']]:
                     data[event['contract_address']][event['_to']] = {"add": 0, "sub": 0}
 
-                data[event['contract_address']][event['_to']]["add"] += float(event["_value"])
+                data[event['contract_address']][event['_to']]["add"] += float(event["_value"]) / 10 ** 18
 
         _filter = {
             "_id": {"$in": list(data.keys())}
