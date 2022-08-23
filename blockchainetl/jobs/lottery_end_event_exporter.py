@@ -70,7 +70,12 @@ class ExportEndEventLottery(BaseJob):
         update_ids = []
         for address in lotteries:
             update_id = {"_id": self.chain_id[address]}
-            _last_id = _ids_response[address].decode_result()[0]
+            try:
+                _last_id = _ids_response[address].decode_result()[0]
+            except Exception as e:
+                _last_id = None
+            if not _last_id: continue
+
             update_id[address] = int(_last_id)
             update_ids.append(update_id)
             for _id in range(self.end_event_ids[address], update_id[address] + 1):
@@ -82,7 +87,12 @@ class ExportEndEventLottery(BaseJob):
         _end_event_data_response = self.client_querier_full_node.sent_batch_to_provider(end_event_data_call)
         end_event_data = []
         for address in lotteries:
-            _last_id = _ids_response[address].decode_result()[0]
+            try:
+                _last_id = _ids_response[address].decode_result()[0]
+            except Exception as e:
+                _last_id = None
+            if not _last_id: continue
+
             for _id in range(self.end_event_ids[address], _last_id + 1):
                 end_event = {"_id": self.chain_id[address.lower()] + "_" + address.lower() + "_" + str(_id),
                              "chain_id": self.chain_id[address.lower()]}
@@ -92,9 +102,9 @@ class ExportEndEventLottery(BaseJob):
                 end_event["ticket"] = address
                 end_event["start_time"] = data[0]
                 end_event["end_time"] = data[1]
-                end_event["total_deposit"] = data[2]/10**18
-                end_event["t_token_reward"] = data[3]/10**18
-                end_event["r_trava_reward"] = data[4]/10**18
+                end_event["total_deposit"] = data[2] / 10 ** 18
+                end_event["t_token_reward"] = data[3] / 10 ** 18
+                end_event["r_trava_reward"] = data[4] / 10 ** 18
                 end_event["random_num"] = str(data[5])
                 end_event["winner"] = data[6].lower()
                 end_event["claimed"] = data[7]
@@ -103,4 +113,4 @@ class ExportEndEventLottery(BaseJob):
         self.memory.set(key, lottery_data)
         self.item_exporter.export_collection_items('lottery', 'end_events', end_event_data)
         self.item_exporter.export_collection_items('lottery', 'collectors', update_ids)
-        _LOGGER.info(f"Exporting {len(end_event_data)} end events takes {round(time.time()-start, 2)}s!")
+        _LOGGER.info(f"Exporting {len(end_event_data)} end events takes {round(time.time() - start, 2)}s!")
