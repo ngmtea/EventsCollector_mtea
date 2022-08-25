@@ -96,19 +96,23 @@ class ExportEndEventLottery(BaseJob):
             for _id in range(self.end_event_ids[address], _last_id + 1):
                 end_event = {"_id": self.chain_id[address.lower()] + "_" + address.lower() + "_" + str(_id),
                              "chain_id": self.chain_id[address.lower()]}
-                data = _end_event_data_response[address + str(_id)].decode_result()
-                lottery_data[address] = data[1]
-                end_event["id"] = _id
-                end_event["ticket"] = address
-                end_event["start_time"] = data[0]
-                end_event["end_time"] = data[1]
-                end_event["total_deposit"] = data[2] / 10 ** 18
-                end_event["t_token_reward"] = data[3] / 10 ** 18
-                end_event["r_trava_reward"] = data[4] / 10 ** 18
-                end_event["random_num"] = str(data[5])
-                end_event["winner"] = data[6].lower()
-                end_event["claimed"] = data[7]
-                end_event_data.append(end_event)
+                try:
+                    data = _end_event_data_response[address + str(_id)].decode_result()
+                    lottery_data[address] = data[1]
+                    end_event["id"] = _id
+                    end_event["ticket"] = address
+                    end_event["start_time"] = data[0]
+                    end_event["end_time"] = data[1]
+                    end_event["total_deposit"] = data[2] / 10 ** 18
+                    end_event["t_token_reward"] = data[3] / 10 ** 18
+                    end_event["r_trava_reward"] = data[4] / 10 ** 18
+                    end_event["random_num"] = str(data[5])
+                    end_event["winner"] = data[6].lower()
+                    end_event["claimed"] = data[7]
+                    end_event_data.append(end_event)
+                except Exception as e:
+                    logging.error("Got exception e")
+                    pass
 
         self.memory.set(key, lottery_data)
         self.item_exporter.export_collection_items('lottery', 'end_events', end_event_data)
