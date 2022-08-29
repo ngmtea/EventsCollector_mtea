@@ -79,9 +79,9 @@ class ExportEndEventLottery(BaseJob):
             update_id[address] = int(_last_id)
             update_ids.append(update_id)
             for _id in range(self.end_event_ids[address], update_id[address] + 1):
-                data = encode_eth_call_data(abi=self.lottery_abi, fn_name='lotteryEvents', args=[int(_id)])
+                data = encode_eth_call_data(abi=self.lottery_abi, fn_name='getLotteryEvent', args=[int(_id)])
                 call = EthCall(to=self.web3.toChecksumAddress(address), block_number="latest", data=data,
-                               abi=self.lottery_abi, fn_name='lotteryEvents', id=address + str(_id))
+                               abi=self.lottery_abi, fn_name='getLotteryEvent', id=address + str(_id))
                 end_event_data_call.append(call)
 
         _end_event_data_response = self.client_querier_full_node.sent_batch_to_provider(end_event_data_call)
@@ -97,7 +97,8 @@ class ExportEndEventLottery(BaseJob):
                 end_event = {"_id": self.chain_id[address.lower()] + "_" + address.lower() + "_" + str(_id),
                              "chain_id": self.chain_id[address.lower()]}
                 try:
-                    data = _end_event_data_response[address + str(_id)].decode_result()
+                    data = _end_event_data_response[address + str(_id)].decode_result()[0]
+                    if not data[0]: continue
                     lottery_data[address] = data[1]
                     end_event["id"] = _id
                     end_event["ticket"] = address
@@ -111,7 +112,7 @@ class ExportEndEventLottery(BaseJob):
                     end_event["claimed"] = data[7]
                     end_event_data.append(end_event)
                 except Exception as e:
-                    logging.error("Got exception e")
+                    logging.error(f"Got exception {e}")
                     pass
 
         self.memory.set(key, lottery_data)

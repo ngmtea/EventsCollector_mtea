@@ -881,5 +881,66 @@ LOTTERY = [
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLotteryEvent",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint128",
+              "name": "startTime",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "endTime",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalDeposit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tTokenReward",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rTravaReward",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "randomNum",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "winner",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "claimed",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct LotteryPool.LotteryEvent",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     }
   ]
