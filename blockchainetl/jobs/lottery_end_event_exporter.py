@@ -104,9 +104,9 @@ class ExportEndEventLottery(BaseJob):
                     end_event["ticket"] = address
                     end_event["start_time"] = data[0]
                     end_event["end_time"] = data[1]
-                    end_event["total_deposit"] = data[2] / 10 ** 18
-                    end_event["t_token_reward"] = data[3] / 10 ** 18
-                    end_event["r_trava_reward"] = data[4] / 10 ** 18
+                    end_event["total_deposit"] = data[2] / 10 ** LotteryConstant.decimals[address.lower()]
+                    end_event["t_token_reward"] = data[3] / 10 ** LotteryConstant.decimals[address.lower()]
+                    end_event["r_trava_reward"] = data[4] / 10 ** LotteryConstant.decimals[address.lower()]
                     end_event["random_num"] = str(data[5])
                     end_event["winner"] = data[6].lower()
                     end_event["claimed"] = data[7]
