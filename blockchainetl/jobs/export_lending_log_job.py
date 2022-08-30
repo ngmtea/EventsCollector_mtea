@@ -1,6 +1,7 @@
 import logging
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.erc20_abi import ERC20_ABI
+from constants.event_constants import Event
 from constants.lending_pool_constants import PoolConstant
 from query_state_lib.base.mappers.eth_call_mapper import EthCall
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
@@ -107,6 +108,37 @@ class ExportLendingEvent(ExportEvent):
             range(self.start_block, self.end_block + 1),
             self.export_batch
         )
+
+    def export_events(self, start_block, end_block, event_subscriber, topic, pools=None):
+        filter_params = {
+            'fromBlock': start_block,
+            'toBlock': end_block,
+            'topics': [topic]
+        }
+        if pools is not None and len(pools) > 0:
+            filter_params['address'] = pools
+
+        event_filter = self.web3.eth.filter(filter_params)
+        events = event_filter.get_all_entries()
+        events_list = []
+        for event in events:
+            log = self.receipt_log.web3_dict_to_receipt_log(event)
+            eth_event = self.receipt_log.extract_event_from_log(log, event_subscriber[log.topics[0]])
+            if eth_event is not None:
+                eth_event_dict = self.receipt_log.eth_event_to_dict(eth_event)
+                if eth_event_dict.get(Event.event_type) == "TRANSFER":
+                    if eth_event_dict.get("_from") == "0x0000000000000000000000000000000000000000" \
+                            or eth_event_dict.get("_to") == "0x0000000000000000000000000000000000000000": continue
+                transaction_hash = eth_event_dict.get(Event.transaction_hash)
+                event_type = eth_event_dict.get(Event.event_type)
+                block_number = eth_event_dict.get(Event.block_number)
+                log_index = eth_event_dict.get(Event.log_index)
+                eth_event_dict['_id'] = f"transaction_{transaction_hash}_{event_type}_{block_number}_{log_index}"
+                events_list.append(eth_event_dict)
+
+        self.web3.eth.uninstallFilter(event_filter.filter_id)
+
+        return events_list
 
     def enrich_event(self):
         eth_price = {}
