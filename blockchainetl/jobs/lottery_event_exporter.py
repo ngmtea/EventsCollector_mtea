@@ -1,6 +1,8 @@
 import logging
 import time
 from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
+
+from constants.event_constants import Event
 from constants.lottery_constant import LotteryConstant
 from artifacts.abi.events.transfer_event_abi import TRANSFER_EVENT_ABI
 from artifacts.abi.lending.loterry import LOTTERY
@@ -71,6 +73,35 @@ class ExportEventLottery(ExportEvent):
                                     topic=self.topics, pools=self.contract_addresses)
         self.event_data += e_list
 
+    def export_events(self, start_block, end_block, event_subscriber, topic, pools=None):
+        filter_params = {
+            'fromBlock': start_block,
+            'toBlock': end_block,
+            'topics': [topic]
+        }
+        if pools is not None and len(pools) > 0:
+            filter_params['address'] = pools
+
+        event_filter = self.web3.eth.filter(filter_params)
+        events = event_filter.get_all_entries()
+        events_list = []
+        for event in events:
+            log = self.receipt_log.web3_dict_to_receipt_log(event)
+            eth_event = self.receipt_log.extract_event_from_log(log, event_subscriber[log.topics[0]])
+            if eth_event is not None:
+                eth_event_dict = self.receipt_log.eth_event_to_dict(eth_event)
+                transaction_hash = eth_event_dict.get(Event.transaction_hash)
+                event_type = eth_event_dict.get(Event.event_type)
+                block_number = eth_event_dict.get(Event.block_number)
+                log_index = eth_event_dict.get(Event.log_index)
+                eth_event_dict["chain_id"] = self.chain_id[eth_event_dict["contract_address"]]
+                eth_event_dict['_id'] = f"transaction_{transaction_hash}_{event_type}_{block_number}_{log_index}"
+                events_list.append(eth_event_dict)
+
+        self.web3.eth.uninstallFilter(event_filter.filter_id)
+
+        return events_list
+
     def enrich_event(self):
         e_list, _votes = [], []
         data = {}
@@ -103,11 +134,6 @@ class ExportEventLottery(ExportEvent):
             for address in data[ticket_address]:
                 if address not in ticket: ticket[address] = 0
                 ticket[address] += data[ticket_address][address]['add'] - data[ticket_address][address]['sub']
-                # if ticket[address] == 0:
-                #     if len(ticket.keys()) > 2:
-                #         del ticket[address]
-                #     else:
-                #         ticket = {"_id": ticket["_id"]}
 
             result.append(ticket)
 
