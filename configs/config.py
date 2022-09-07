@@ -31,6 +31,7 @@ class MongoDBConfig:
         "bsc_testnet":"0x61_events",
         'rinkeby':"0x4_events"
     }
+    LOTTERY = ["lottery_bsc"]
     CONNECTION_URL = f'mongodb://{NAME}:{PASSWORD}@{HOST}:{PORT}'
 
 
