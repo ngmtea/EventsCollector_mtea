@@ -61,7 +61,7 @@ from constants.abi_constants import ABI
               help='The maximum number of workers.')
 @click.option('-ca', '--contract-addresses', default=[], show_default=True, type=str, multiple=True,
               help='The list of contract addresses to filter by.')
-@click.option('-oa', '--oracle-address', default=[], show_default=True, type=str, cd False,
+@click.option('-oa', '--oracle-address', default=[], show_default=True, type=str, multiple=False,
               help='The list of oracle address to filter by.')
 @click.option('-a', '--abi', default=None, type=str, help='lending abi vesion')
 @click.option('--log-file', default=None, show_default=True, type=str, help='Log file')
