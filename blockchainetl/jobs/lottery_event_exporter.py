@@ -49,6 +49,7 @@ class ExportEventLottery(ExportEvent):
         self.lottery_abi = lottery_abi
         self.block_timestamp = None
         self.block_number = None
+        self.event_id = []
         self.client_querier_full_node = client_querier_full_node
 
     def _export(self):
@@ -59,10 +60,10 @@ class ExportEventLottery(ExportEvent):
 
     def _end(self):
         self.batch_work_executor.shutdown()
-        self.item_exporter.export_items(self.event_data)
         _LOGGER.info(f'enrich event data from')
         self.get_block_timestamp()
         self.enrich_event()
+        self.item_exporter.export_items(self.event_data)
         self.item_exporter.close()
         _LOGGER.info(f'Crawled {len(self.event_data)} events from {self.start_block} to {self.end_block}!')
 
@@ -97,15 +98,19 @@ class ExportEventLottery(ExportEvent):
                 eth_event_dict["chain_id"] = self.chain_id[eth_event_dict["contract_address"]]
                 eth_event_dict['_id'] = f"transaction_{transaction_hash}_{event_type}_{block_number}_{log_index}"
                 events_list.append(eth_event_dict)
+                self.event_id.append(eth_event_dict['_id'])
 
         self.web3.eth.uninstallFilter(event_filter.filter_id)
 
         return events_list
 
     def enrich_event(self):
-        e_list, _votes = [], []
+        _votes = []
         data = {}
+        saved_event = self.item_exporter.get_event_items({"_id": {"$in": self.event_id}})
+        event_id = [i["_id"] for i in saved_event]
         for event in self.event_data:
+            if event["_id"] in event_id: continue
             if event['contract_address'] not in data:
                 data[event['contract_address']] = {}
 
@@ -113,13 +118,17 @@ class ExportEventLottery(ExportEvent):
                 if event['_from'] not in data[event['contract_address']]:
                     data[event['contract_address']][event['_from']] = {"add": 0, "sub": 0}
 
-                data[event['contract_address']][event['_from']]["sub"] += float(event["_value"]) / 10 ** LotteryConstant.decimals[event["contract_address"]]
+                data[event['contract_address']][event['_from']]["sub"] += float(event["_value"]) / 10 ** \
+                                                                          LotteryConstant.decimals[
+                                                                              event["contract_address"]]
 
             if event['_to'] != "0x0000000000000000000000000000000000000000":
                 if event['_to'] not in data[event['contract_address']]:
                     data[event['contract_address']][event['_to']] = {"add": 0, "sub": 0}
 
-                data[event['contract_address']][event['_to']]["add"] += float(event["_value"]) / 10 ** LotteryConstant.decimals[event["contract_address"]]
+                data[event['contract_address']][event['_to']]["add"] += float(event["_value"]) / 10 ** \
+                                                                        LotteryConstant.decimals[
+                                                                            event["contract_address"]]
 
         _filter = {
             "_id": {"$in": [self.chain_id[i] + "_" + i for i in list(data.keys())]}
