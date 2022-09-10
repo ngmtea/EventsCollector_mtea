@@ -165,7 +165,7 @@ class ExportLendingEvent(ExportEvent):
                         price_token = int(price_token, 16)
                     except:
                         _LOGGER.warning(f"Can not crawl price of {event[i]}!")
-                        _LOGGER.info(f"Get latest price in mongo!")
+                        _LOGGER.info(f"Get latest price!")
                         price_token, count = None, 0
                         while not price_token:
                             if count < 10:
