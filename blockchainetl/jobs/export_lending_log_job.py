@@ -178,7 +178,7 @@ class ExportLendingEvent(ExportEvent):
                                 self.web3.toChecksumAddress(event[i])). \
                                 call(block_identifier=block - 10)
                             except Exception as e:
-                                logging.info(f"Err {e} in {)
+                                logging.info(f"Err {e} in {block}")
                                 time.sleep(10)
                                 pass
 
