@@ -165,10 +165,15 @@ class ExportLendingEvent(ExportEvent):
                         price_token = None
                         block = event["block_number"]
                         while not price_token:
+                            if block < 0:
+                                price_token = 1
                             block -= 1
-                            price_token = self.oracle_contract.functions.getAssetPrice(
-                                self.web3.toChecksumAddress(event[i])). \
-                                call(block_identifier=block - 10)
+                            try:
+                                price_token = self.oracle_contract.functions.getAssetPrice(
+                                    self.web3.toChecksumAddress(event[i])). \
+                                    call(block_identifier=block)
+                            except:
+                                pass
                     if eth_price:
                         price_token = price_token * (
                                 int(eth_price[event['_id'] + '_' + i].result[66:130], 16) / 10 ** 18)
