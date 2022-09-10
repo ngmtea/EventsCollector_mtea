@@ -159,7 +159,7 @@ class ExportLendingEvent(ExportEvent):
                     event[f'decimal_of_{i.replace("Asset", "_asset")}'] = self.token_get_decimals(event[i])
                     try:
                         price_token = int(price[event['_id'] + '_' + i].result, 16)
-                    except Exception as e:
+                    except:
                         _LOGGER.warning(f"Can not crawl price of {event[i]}!")
                         _LOGGER.info(f"Start crawl price before!")
                         price_token = None
