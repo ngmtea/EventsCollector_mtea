@@ -182,14 +182,14 @@ class ExportLendingEvent(ExportEvent):
                                 time.sleep(10)
                                 pass
 
-                        if count < 10: continue
-                        _LOGGER.info(f"Get price in mongo!")
-                        token = self.item_exporter.get_item_in_collection(MongoDBConfig.TOKENS, {"_id": "token_" + event[i]})
-                        token = list(token)
-                        if token and "price" in token[0]:
-                            price_token = token[0]["price"]
-                        else:
-                            price_token = 1
+                        if count > 10:
+                            _LOGGER.info(f"Get price in mongo!")
+                            token = self.item_exporter.get_item_in_collection(MongoDBConfig.TOKENS, {"_id": "token_" + event[i]})
+                            token = list(token)
+                            if token and "price" in token[0]:
+                                price_token = token[0]["price"]
+                            else:
+                                price_token = 1
 
                     if eth_price:
                         price_token = price_token * (
