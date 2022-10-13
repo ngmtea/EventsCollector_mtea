@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import click
-from blockchainetl.bricher.cli.export_cream_venus_event_stream import stream_cream_venus_event_collector
 
 from blockchainetl.cli.export_event_job_stream import stream_event_collector
 from blockchainetl.cli.export_lending_event_stream import stream_lending_log_collector
@@ -28,6 +27,7 @@ from blockchainetl.cli.handle_miss_events import stream_missed_lending_event_col
 from blockchainetl.cli.multi_sig_events_stream import stream_multi_sig_event_collector
 from blockchainetl.cli.export_multi_lending_event_stream import stream_multi_lending_event_collector
 from blockchainetl.cli.stream import stream
+from blockchainetl.cli.export_cream_venus_event_stream import stream_cream_venus_event_collector
 
 
 @click.group()
@@ -43,8 +43,4 @@ cli.add_command(stream_multi_sig_event_collector, "stream_multi_sig_event_collec
 cli.add_command(stream_missed_lending_event_collector, "stream_missed_lending_event_collector")
 cli.add_command(stream_multi_lending_event_collector, "stream_multi_lending_event_collector")
 cli.add_command(stream, "stream")
-
-# Cream and Venus.
-cli.add_command(
-    stream_cream_venus_event_collector, "stream_cream_venus_event_collector"
-)
+cli.add_command(stream_cream_venus_event_collector, "stream_cream_venus_event_collector")

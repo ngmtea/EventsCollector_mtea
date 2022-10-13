@@ -1,6 +1,9 @@
 import logging
+import time
+
 from artifacts.abi.trava_oracle_abi import TRAVA_ORACLE_ABI
 from artifacts.abi.erc20_abi import ERC20_ABI
+from configs.config import MongoDBConfig
 from constants.event_constants import Event
 from constants.lending_pool_constants import PoolConstant
 from query_state_lib.base.mappers.eth_call_mapper import EthCall
@@ -60,7 +63,7 @@ class ExportLendingEvent(ExportEvent):
         self.web3_ = web3_
         self.oracle_abi = oracle_abi
         self.oracle_address = oracle_address
-        self.oracle_contract = web3_.eth.contract(address=oracle_address, abi=oracle_abi)
+        self.oracle_contract = web3.eth.contract(address=oracle_address, abi=oracle_abi)
         self.eth_call_full_node = []
         self.eth_call_archive_node = []
         self.eth_token_price_call = []
@@ -158,17 +161,36 @@ class ExportLendingEvent(ExportEvent):
                 if i in event.keys():
                     event[f'decimal_of_{i.replace("Asset", "_asset")}'] = self.token_get_decimals(event[i])
                     try:
-                        price_token = int(price[event['_id'] + '_' + i].result, 16)
-                    except Exception as e:
+                        price_token = price[event['_id'] + '_' + i].result
+                        price_token = int(price_token, 16)
+                    except:
                         _LOGGER.warning(f"Can not crawl price of {event[i]}!")
-                        _LOGGER.info(f"Start crawl price before!")
-                        price_token = None
-                        block = event["block_number"]
+                        _LOGGER.info(f"Get latest price!")
+                        price_token, count = None, 0
                         while not price_token:
-                            block -= 1
-                            price_token = self.oracle_contract.functions.getAssetPrice(
+                            if count < 10:
+                                count += 1
+                            else:
+                                break
+                            block = self.web3.eth.blockNumber
+                            try:
+                                price_token = self.oracle_contract.functions.getAssetPrice(
                                 self.web3.toChecksumAddress(event[i])). \
                                 call(block_identifier=block - 10)
+                            except Exception as e:
+                                logging.info(f"Err {e} in {block}")
+                                time.sleep(10)
+                                pass
+
+                        if count > 10:
+                            _LOGGER.info(f"Get price in mongo!")
+                            token = self.item_exporter.get_item_in_collection(MongoDBConfig.TOKENS, {"_id": "token_" + event[i]})
+                            token = list(token)
+                            if token and "price" in token[0]:
+                                price_token = token[0]["price"]
+                            else:
+                                price_token = 1
+
                     if eth_price:
                         price_token = price_token * (
                                 int(eth_price[event['_id'] + '_' + i].result[66:130], 16) / 10 ** 18)

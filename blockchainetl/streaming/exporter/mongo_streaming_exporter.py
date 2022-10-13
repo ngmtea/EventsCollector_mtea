@@ -11,7 +11,8 @@ class MongodbStreamingExporter(object):
     """Manages connection to  database and makes async queries
     """
 
-    def __init__(self, connection_url, collector_id=MongoDBConfig.LENDING_EVENTS, db_prefix="", database=MongoDBConfig.DATABASE):
+    def __init__(self, connection_url, collector_id=MongoDBConfig.LENDING_EVENTS, db_prefix="",
+                 database=MongoDBConfig.DATABASE):
         self._conn = None
         # url = f"mongodb://{MongoDBConfig.NAME}:{MongoDBConfig.PASSWORD}@{MongoDBConfig.HOST}:{MongoDBConfig.PORT}"
         url = connection_url
@@ -26,6 +27,8 @@ class MongodbStreamingExporter(object):
             self.event = self.mongo_db[collector_id]
         elif collector_id in MongoDBConfig.MULTI_SIG_EVENTS:
             self.event = self.mongo_db[MongoDBConfig.MULTI_SIG_EVENTS[collector_id]]
+        elif collector_id in MongoDBConfig.LOTTERY:
+            self.event = self.mongo_db["events"]
         else:
             self.event = self.mongo_db[MongoDBConfig.LENDING_EVENTS]
 
@@ -44,6 +47,9 @@ class MongodbStreamingExporter(object):
 
     def get_event_items(self, filter):
         return list(self.event.find(filter))
+
+    def get_item_in_collection(self, collection, filter):
+        return self.mongo_db[collection].find(filter)
 
     def get_items(self, db, collection, filter):
         return self.mongo[db][collection].find(filter)
