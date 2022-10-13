@@ -42,7 +42,6 @@ def stream_cream_venus_event_collector(start_block: int, end_block: int, mongo_u
     else:
         token_address_importer: MongoStreamingImporter = MongoStreamingImporter(mongo_uri)
     token_addresses: list = token_address_importer.get_cream_venus_token_address("Cream")
-    token_addresses: list = ['0x1ffe17b99b439be0afc831239ddecda2a790ff3a']
 
     logger = logging.getLogger("Stream_cream_venus_event_collector")
     provider = pick_random_provider_uri(provider)

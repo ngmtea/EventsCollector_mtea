@@ -13,6 +13,13 @@ from query_state_lib.base.mappers.eth_json_rpc_mapper import EthJsonRpc
 
 from artifacts.abi.CREAM_LENS_ABI import CREAM_LENS_ABI
 from artifacts.abi.COMPOUND_COMPTROLLER_ABI import COMPOUND_COMPTROLLER_ABI
+from artifacts.abi.lending.trava.lending_pool_abi import LENDING_POOL_ABI
+
+from query_state_lib.base.mappers.eth_call_mapper import EthCall
+from query_state_lib.base.utils.encoder import encode_eth_call_data
+
+from using_query_state_lib import using_query_state_lib
+
 
 from pycoingecko import CoinGeckoAPI
 
@@ -117,36 +124,46 @@ class ExportCreamVenusEvent(ExportEvent):
     def enrich_event(self):
 
         lending_address = "0x1a014ffe0cd187a298a7e79ba5ab05538686ea4a"
-        lending_contract = self.web3.eth.contract(
-            address=self.web3.toChecksumAddress(lending_address), abi=CREAM_LENS_ABI
-        )
-        comptroller_address = '0x589de0f0ccf905477646599bb3e5c622c84cc0ba'
-        comptroller_contract = self.web3.eth.contract(
-            address=self.web3.toChecksumAddress(comptroller_address), abi=COMPOUND_COMPTROLLER_ABI
-        )
-        underlying_token_prices = {}
 
         result = []
         block_transaction = self.client_querier_full_node.sent_batch_to_provider(
             self.eth_call_full_node)
         for event in self.event_data:
-            tokens = event["contract_address"]
-            tokens = [self.web3.toChecksumAddress(tokens)]
+
+            token = event["contract_address"]
+            token = [self.web3.toChecksumAddress(token)]
+
             event['block_timestamp'] = int(block_transaction[event['_id'] + '_block'].result['timestamp'], 16)
             event['wallet'] = str(block_transaction[event['_id'] + '_transaction'].result['from']).lower()
 
-            reserves_token_info = lending_contract.functions.cTokenMetadataAll(tokens).call(
-                block_identifier=event['block_number'])
+            result_tmp_exchange_rate = using_query_state_lib(lending_address=lending_address,
+                                               web3=self.web3,
+                                               client_querier=self.client_querier_full_node,
+                                               abi=CREAM_LENS_ABI,
+                                               fn_name='cTokenMetadata',
+                                               args=token)
 
-            exchange_rate = reserves_token_info[0][1]
+            #reserves_token_info = lending_contract.functions.cTokenMetadataAll(token).call(
+            #    block_identifier=event['block_number'])
 
-            underlying_price = lending_contract.functions.cTokenUnderlyingPriceAll(tokens).call(
-                block_identifier=event['block_number'])
+            #exchange_rate = reserves_token_info[0][1]
+            exchange_rate = result_tmp_exchange_rate[0][1]
+
+            #underlying_price = lending_contract.functions.cTokenUnderlyingPriceAll(token).call(
+            #    block_identifier=event['block_number'])
+
+            result_tmp_underlying_price = using_query_state_lib(lending_address=lending_address,
+                                                                web3=self.web3,
+                                                                client_querier=self.client_querier_full_node,
+                                                                abi=CREAM_LENS_ABI,
+                                                                fn_name='cTokenUnderlyingPrice',
+                                                                args=token)
+            underlying_price = result_tmp_underlying_price[0][1]
 
             coingecko = CoinGeckoAPI()
             bnb_price: float = coingecko.get_coins_markets(vs_currency='usd', ids='binancecoin')[0]['current_price']
 
-            tokenPrice: float = (underlying_price[0][1] * bnb_price * exchange_rate)/(10**18)
+            tokenPrice: float = (underlying_price * bnb_price * exchange_rate)/(10**18)
 
             event['price_token'] = tokenPrice
 

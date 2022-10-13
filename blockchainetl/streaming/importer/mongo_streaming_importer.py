@@ -10,13 +10,13 @@ from configs.config import MongoDBConfig
 class MongoStreamingImporter(object):
     def __init__(
             self,
-            collection_url: str = MongoDBConfig.CONNECTION_URL,
+            collection_url_importer: str = MongoDBConfig.CONNECTION_URL,
             db_name: str = MongoDBConfig.BRICHER_DATABASE,
             collection_name: str = MongoDBConfig.DAPPS_COLLECTION,
-    ) -> None:
+    ):
         try:
             # FIXME Unable to read from .env file
-            self.client: MongoClient = MongoClient(collection_url)
+            self.client: MongoClient = MongoClient(collection_url_importer)
         except:
             sys.exit(1)
         self.db = self.client[db_name]
@@ -31,8 +31,8 @@ class MongoStreamingImporter(object):
         #     for reserve in c["reservesList"]:
         #         result.append(c["reservesList"][reserve]["cToken"])
 
-        venus_collection: Cursor = self.collection.find({"projectName": project_name})
-        for v in venus_collection:
+        cream_collection: Cursor = self.collection.find({"projectName": project_name})
+        for v in cream_collection:
             for reserve in v["reservesList"]:
                 result.append(v["reservesList"][reserve]["cToken"])
 

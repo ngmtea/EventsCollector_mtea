@@ -14,8 +14,8 @@ class CreamVenusEventStreamerAdapter:
             provider: str,
             item_exporter: CreamVenusMongodbStreamingExporter,
             client_querier_full_node,
-            batch_size=200,
-            max_workers=4,
+            batch_size=2000,
+            max_workers=1,
             abi=CTOKEN_EVENT,
     ):
         self.contract_addresses: list = [
